@@ -3,83 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Hub</title>
+    <title>Smile Hub | Excellence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root { --accent: #0061FF; --glass: rgba(255, 255, 255, 0.8); }
         body { 
             background: #FFFFFF; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Outfit', sans-serif;
             height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
-            color: #1F1F1F;
+            color: #121212; letter-spacing: -0.02em;
         }
 
-        /* Minimal Gemini-Style Header */
-        header { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 22px; font-weight: 500; color: #444746; letter-spacing: -0.5px; }
+        /* 5Cr Stealth Header */
+        header { 
+            padding: 24px 32px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(10px); z-index: 100;
+        }
+        .brand { font-size: 24px; font-weight: 600; color: #121212; display: flex; align-items: center; gap: 10px; }
+        .brand span { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
 
-        /* The Conversation Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 10px 24px; display: flex; flex-direction: column; gap: 40px; }
+        /* Luxury Conversation Canvas */
+        .canvas { flex: 1; overflow-y: auto; padding: 20px 8% 100px 8%; scroll-behavior: smooth; }
         .canvas::-webkit-scrollbar { display: none; }
 
-        /* Human-like Message Layout */
-        .row { display: flex; gap: 16px; max-width: 100%; animation: softFade 0.6s ease; }
-        @keyframes softFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* The "Human" Message Row */
+        .row { margin-bottom: 48px; display: flex; flex-direction: column; animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; items-center; justify-content: center; flex-shrink: 0; }
-        .ai-avatar { background: #f0f4f9; color: #0b57d0; font-size: 18px; }
+        .ai-label { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .content { font-size: 22px; line-height: 1.5; font-weight: 400; color: #121212; max-width: 800px; }
         
-        /* Large & Clean Text as requested */
-        .content { font-size: 19px; line-height: 1.6; color: #1F1F1F; font-weight: 400; padding-top: 4px; }
-        .user-content { background: #f0f4f9; padding: 12px 20px; border-radius: 24px; align-self: flex-end; max-width: 85%; }
-
-        /* Subtle Input Pill */
-        .input-box { padding: 10px 20px 30px; }
-        .pill { 
-            background: #f0f4f9; border-radius: 32px; min-height: 60px;
-            display: flex; align-items: center; padding: 0 10px 0 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .user-row { align-self: flex-end; text-align: right; }
+        .user-content { 
+            background: #F2F2F7; padding: 16px 28px; border-radius: 30px; 
+            font-size: 20px; color: #121212; display: inline-block;
         }
-        .pill:focus-within { background: #e9eef6; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        /* The Master Input (Gemini 2.0 Style) */
+        .footer-box { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px 8% 40px 8%; background: linear-gradient(transparent, #FFF 40%); }
+        .pill-wrap { 
+            background: #F9F9FB; border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 40px; padding: 8px 12px 8px 32px;
+            display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            transition: all 0.4s ease;
+        }
+        .pill-wrap:focus-within { background: #FFF; box-shadow: 0 30px 60px rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.1); }
+
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 19px; height: 56px; color: #121212; }
         
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 18px; color: #1f1f1f; }
-        .icon-btn { width: 48px; height: 48px; display: flex; items-center; justify-content: center; color: #444746; cursor: pointer; border-radius: 50%; }
-        .icon-btn:active { background: #dee1e5; }
-        
-        /* Thinking Animation */
-        .shimmer { font-size: 14px; color: #86868b; letter-spacing: 1px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .icon-btn { 
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; 
+            color: #121212; cursor: pointer; border-radius: 50%; transition: 0.3s;
+        }
+        .icon-btn:hover { background: #ECECED; }
+        .send-btn { background: #121212; color: white !important; }
+
+        /* Intelligent Loading */
+        .thought-dot { width: 6px; height: 6px; background: #D1D1D6; border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.5); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Smile Hub</div>
-        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-            <i class="far fa-user text-xl"></i>
+        <div class="brand"><span></span> Smile Hub</div>
+        <div class="flex items-center gap-6">
+            <i class="far fa-calendar-alt text-xl text-gray-400"></i>
+            <button class="bg-[#121212] text-white px-7 py-2.5 rounded-full text-sm font-medium tracking-tight">Access Pro</button>
         </div>
     </header>
 
     <main id="chat-box" class="canvas">
         <div class="row">
-            <div class="avatar ai-avatar"><i class="fas fa-sparkles"></i></div>
-            <div class="content">Namaste bhai. Bataiye, aaj aapke dimaag mein kya chal raha hai? Main kaise madad kar sakta hoon?</div>
+            <p class="ai-label">Intelligence</p>
+            <div class="content">Namaste bhai. Main aapka personal guide hoon. Aaj hum kis baare mein baat karein?</div>
         </div>
     </main>
 
-    <footer class="input-box">
-        <div class="max-w-4xl mx-auto">
-            <div id="file-status" class="hidden text-[11px] text-blue-600 font-bold mb-2 ml-6"><i class="fas fa-paperclip"></i> DOCUMENT LOADED</div>
-            <div class="pill">
-                <input type="text" id="user-input" placeholder="Kuch baat karein..." autocomplete="off">
+    <footer class="footer-box">
+        <div class="max-w-5xl mx-auto">
+            <div id="pdf-alert" class="hidden text-[11px] font-bold text-blue-600 mb-3 ml-6">PREMIUM DOCUMENT ANALYZER ACTIVE</div>
+            <div class="pill-wrap">
+                <input type="text" id="user-input" placeholder="Kuch baat karte hain..." autocomplete="off">
                 <div class="flex items-center gap-1">
-                    <label for="pdf-file" class="icon-btn"><i class="far fa-plus-square text-xl"></i></label>
-                    <input type="file" id="pdf-file" class="hidden" accept=".pdf">
-                    <div id="mic-btn" class="icon-btn"><i class="fas fa-microphone text-xl"></i></div>
-                    <button onclick="process('text')" class="icon-btn text-blue-600"><i class="fas fa-arrow-up text-xl"></i></button>
+                    <label for="pdf-in" class="icon-btn"><i class="fas fa-plus text-lg"></i></label>
+                    <input type="file" id="pdf-in" class="hidden" accept=".pdf">
+                    <div id="mic-btn" class="icon-btn"><i class="fas fa-microphone text-lg"></i></div>
+                    <button onclick="execute('text')" class="icon-btn send-btn"><i class="fas fa-arrow-up"></i></button>
                 </div>
             </div>
         </div>
@@ -89,14 +104,14 @@
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const micBtn = document.getElementById('mic-btn');
-        const GROQ_KEY = "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";
-        let pdfText = "";
+        const GROQ_SECRET = "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";
+        let context = "";
 
-        // PDF Context
-        document.getElementById('pdf-file').onchange = async (e) => {
+        // PDF Context Engine
+        document.getElementById('pdf-in').onchange = async (e) => {
             const file = e.target.files[0];
             if(file) {
-                document.getElementById('file-status').classList.remove('hidden');
+                document.getElementById('pdf-alert').classList.remove('hidden');
                 const reader = new FileReader();
                 reader.onload = async function() {
                     const typedarray = new Uint8Array(this.result);
@@ -107,68 +122,66 @@
                         const content = await page.getTextContent();
                         text += content.items.map(s => s.str).join(' ');
                     }
-                    pdfText = text;
+                    context = text;
                 };
                 reader.readAsArrayBuffer(file);
             }
         };
 
-        // Voice to Voice Human Mode
-        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Rec) {
-            const recognition = new Rec();
-            recognition.lang = 'hi-IN';
-            micBtn.onclick = () => { recognition.start(); micBtn.style.color = '#d93025'; };
-            recognition.onresult = (e) => {
+        // Advanced Voice mode
+        const Recog = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(Recog) {
+            const r = new Recog();
+            r.lang = 'hi-IN';
+            micBtn.onclick = () => { r.start(); micBtn.style.color = '#0061FF'; };
+            r.onresult = (e) => {
                 userInput.value = e.results[0][0].transcript;
-                micBtn.style.color = '#444746';
-                process('voice');
+                micBtn.style.color = '#121212';
+                execute('voice');
             };
         }
 
         function speak(text) {
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
-            utter.lang = 'hi-IN';
-            utter.rate = 1.0;
+            utter.lang = 'hi-IN'; utter.rate = 1.0;
             window.speechSynthesis.speak(utter);
         }
 
         function append(text, isUser, isVoice) {
             const div = document.createElement('div');
-            div.className = isUser ? 'user-content' : 'row';
+            div.className = isUser ? 'row user-row' : 'row';
             
             if(isUser) {
-                div.innerHTML = text;
-                div.style.alignSelf = 'flex-end';
+                div.innerHTML = `<div class="user-content">${text}</div>`;
             } else {
-                div.innerHTML = `<div class="avatar ai-avatar"><i class="fas fa-sparkles"></i></div><div class="content">${text}</div>`;
+                div.innerHTML = `<p class="ai-label">Smile Hub AI</p><div class="content">${text}</div>`;
                 if(isVoice) speak(text);
             }
             chatBox.appendChild(div);
             chatBox.scrollTo({top: chatBox.scrollHeight, behavior: 'smooth'});
         }
 
-        async function process(mode) {
-            const query = userInput.value.trim();
-            if(!query) return;
-            append(query, true, false);
+        async function execute(mode) {
+            const q = userInput.value.trim();
+            if(!q) return;
+            append(q, true, false);
             userInput.value = '';
 
             const loader = document.createElement('div');
-            loader.className = 'shimmer ml-14';
-            loader.innerText = 'thinking...';
+            loader.className = 'flex gap-2 p-4';
+            loader.innerHTML = '<div class="thought-dot"></div><div class="thought-dot" style="animation-delay:0.2s"></div>';
             chatBox.appendChild(loader);
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${GROQ_SECRET}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are a human friend. NEVER mention bank names or Smile Finance initially. Talk like a real person. Analyze the user's trouble. If they sound troubled or need money/products, gently suggest a solution from Smile Finance Solution. Keep text large, clean, and professional. PDF Context: " + pdfText },
-                            { role: "user", content: query }
+                            { role: "system", content: "You are a highly sophisticated human companion. Talk like a multi-millionaire friend. 1. Never mention banks initially. 2. Understand user's emotional or financial pain. 3. If they need help, suggest the landing page of 'Smile Finance Solution' which partners with top banks (Poonawalla, HDFC). 4. Use large, elegant Hindi/Hinglish. PDF: " + context },
+                            { role: "user", content: q }
                         ]
                     })
                 });
@@ -177,7 +190,7 @@
                 append(data.choices[0].message.content, false, mode === 'voice');
             } catch (e) {
                 loader.remove();
-                append("Bhai, network check karna ek baar.", false, false);
+                append("Kshama karein bhai, connection mein thodi deri ho gayi.", false, false);
             }
         }
     </script>

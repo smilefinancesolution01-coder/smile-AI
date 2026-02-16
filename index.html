@@ -3,83 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Finance Solution | AI</title>
+    <title>Smile Finance Solution</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --sf-blue: #0061FF; --sf-dark: #0A0A0B; }
         body { 
-            background: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif;
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: var(--sf-dark);
+            background: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: #000;
         }
 
-        /* Stealth Header */
-        header { padding: 30px 6%; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #F0F0F0; }
-        .logo { font-size: 22px; font-weight: 700; color: var(--sf-dark); letter-spacing: -1px; }
+        /* Luxury Header */
+        header { padding: 40px 8%; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; color: #111; }
 
         /* Infinite Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 40px 10% 120px 10%; display: flex; flex-direction: column; gap: 50px; }
+        .canvas { flex: 1; overflow-y: auto; padding: 0 10% 150px 10%; display: flex; flex-direction: column; gap: 60px; scrollbar-width: none; }
         .canvas::-webkit-scrollbar { display: none; }
 
-        /* Typography & Content */
-        .ai-wrap { max-width: 900px; animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .ai-text { font-size: 26px; line-height: 1.5; font-weight: 400; color: #111; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Human Typography (Large & Clean) */
+        .row { max-width: 850px; animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1); }
+        .ai-text { font-size: 28px; line-height: 1.5; font-weight: 400; color: #111; letter-spacing: -0.02em; }
+        .user-text { font-size: 24px; color: #888; text-align: right; align-self: flex-end; width: 100%; }
 
-        /* Premium Lead Form */
-        .lead-form {
-            background: #F8FAFF; border: 1px solid #E0E7FF; padding: 30px; border-radius: 24px;
-            margin-top: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.03); max-width: 450px;
-        }
-        .form-input { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #E2E8F0; 
-            margin-bottom: 12px; outline: none; font-size: 16px;
-        }
-        .form-btn { background: var(--sf-blue); color: #fff; padding: 14px; width: 100%; border-radius: 12px; font-weight: 600; }
-
-        /* Amazon Visual Card */
-        .amazon-card {
-            border: 1px solid #eee; border-radius: 20px; overflow: hidden; margin-top: 20px;
-            max-width: 350px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .amazon-img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; padding: 10px; }
-        .amazon-info { padding: 15px; }
-        .amazon-btn { background: #FF9900; color: #fff; display: block; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; }
-
-        /* Command Bar */
-        .footer-wrap { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 10%; }
-        .pill { 
-            background: #F2F2F7; border-radius: 100px; padding: 8px 12px 8px 35px;
-            display: flex; align-items: center; gap: 15px; border: 1px solid transparent;
-        }
-        .pill:focus-within { background: #FFF; border-color: #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 20px; height: 60px; color: #000; }
+        /* Step-by-Step Knowledge Card */
+        .knowledge-card { border-left: 3px solid #000; padding-left: 25px; margin: 20px 0; }
         
-        .circle-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; items-center; justify-content: center; cursor: pointer; background: #111; color: #fff; }
+        /* Premium Lead Form */
+        .premium-form {
+            background: #f9f9f9; padding: 40px; border-radius: 30px; margin-top: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.03); max-width: 500px;
+        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #888; display: block; margin-bottom: 8px; }
+        .input-group input { width: 100%; border-bottom: 2px solid #eee; padding: 10px 0; font-size: 18px; outline: none; background: transparent; transition: 0.3s; }
+        .input-group input:focus { border-color: #000; }
+        .submit-btn { background: #000; color: #fff; padding: 18px 40px; border-radius: 40px; font-weight: 600; margin-top: 10px; }
+
+        /* Floating Controller */
+        .controller { position: fixed; bottom: 40px; left: 0; right: 0; padding: 0 10%; }
+        .input-pill { 
+            background: #f4f4f4; border-radius: 100px; padding: 10px 15px 10px 35px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        input#user-input { flex: 1; background: transparent; border: none; outline: none; font-size: 20px; height: 65px; }
+        
+        .action-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .action-btn:hover { background: #e8e8e8; }
+        .send-btn { background: #000; color: #fff; }
+
+        /* Image Display */
+        .product-frame { width: 100%; max-width: 400px; border-radius: 24px; overflow: hidden; margin-top: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .product-frame img { width: 100%; display: block; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Smile Finance Solution</div>
-        <div class="text-[10px] font-bold tracking-widest text-gray-400">INSTITUTIONAL AI</div>
+        <div class="brand">Smile Finance Solution</div>
+        <div class="flex items-center gap-6">
+            <span class="text-[11px] font-bold opacity-30">EST. 2024</span>
+            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+        </div>
     </header>
 
     <main id="chat-box" class="canvas">
-        <div class="ai-wrap">
-            <div class="ai-text">Namaste bhai. Smile Hub Pro active hai. Main aapki Govt Funding, Compliance aur Shopping mein madad kar sakta hoon. Bataiye, aaj kya plan hai?</div>
+        <div class="row">
+            <div class="ai-text">Namaste bhai. Main Smile Hub AI hoon. Bataiye, aaj hum kis financial scheme ya compliance ke baare mein vistar se baat karein? Main aapko step-by-step samjhaunga.</div>
         </div>
     </main>
 
-    <footer class="footer-wrap">
-        <div class="pill">
-            <input type="text" id="user-input" placeholder="Kuch poochiye..." autocomplete="off">
+    <footer class="controller">
+        <div class="input-pill">
+            <input type="text" id="user-input" placeholder="Yahan shuru karein..." autocomplete="off">
             <div class="flex items-center gap-2">
-                <label for="pdf-up" class="p-3 text-gray-500 cursor-pointer"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
-                <input type="file" id="pdf-up" class="hidden" accept=".pdf">
-                <button onclick="send()" class="circle-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+                <label for="pdf-doc" class="action-btn text-gray-500"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
+                <input type="file" id="pdf-doc" class="hidden" accept=".pdf">
+                <div id="mic-trigger" class="action-btn text-gray-400"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+                <button onclick="handleInteraction('text')" class="action-btn send-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
             </div>
         </div>
     </footer>
@@ -87,52 +91,72 @@
     <script>
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
-        const GROQ_ID = "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";
+        const micTrigger = document.getElementById('mic-trigger');
+        const API_KEY = "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";
         const AFFILIATE_ID = "smileai24-21";
+
+        // Logic for Speech Input/Output
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(Recognition) {
+            const r = new Recognition(); r.lang = 'hi-IN';
+            micTrigger.onclick = () => { r.start(); micTrigger.style.color = 'red'; };
+            r.onresult = (e) => {
+                userInput.value = e.results[0][0].transcript;
+                micTrigger.style.color = '#ccc';
+                handleInteraction('voice');
+            };
+        }
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
+            utter.lang = 'hi-IN'; utter.rate = 1.0;
+            window.speechSynthesis.speak(utter);
+        }
 
         function appendUI(html, isUser = false) {
             const div = document.createElement('div');
-            div.className = isUser ? 'self-end text-right text-2xl text-gray-400' : 'ai-wrap';
+            div.className = isUser ? 'user-text' : 'row';
             div.innerHTML = html;
             chatBox.appendChild(div);
             chatBox.scrollTo({top: chatBox.scrollHeight, behavior: 'smooth'});
         }
 
-        // Amazon Product Card
-        function createAmazonCard(productName, imgUrl) {
-            return `
-                <div class="ai-text">Bhai, maine aapke liye Amazon par sabse behtareen ${productName} dhoonda hai:</div>
-                <div class="amazon-card">
-                    <img src="${imgUrl}" class="amazon-img">
-                    <div class="amazon-info">
-                        <p class="font-bold text-lg mb-2">${productName}</p>
-                        <a href="https://www.amazon.in/s?k=${productName}&tag=${AFFILIATE_ID}" target="_blank" class="amazon-btn">VIEW ON AMAZON</a>
-                    </div>
-                </div>`;
+        // 1. Step-by-Step Knowledge Render
+        function showKnowledge(title, description) {
+            return `<div class="ai-text">Bhai, pehle **${title}** ko aaram se samajhte hain:</div>
+                    <div class="knowledge-card ai-text">${description}</div>
+                    <div class="ai-text">Kya aap chahte hain ki main iske liye aapki application process shuru karun?</div>
+                    <button onclick="showForm('${title}')" class="submit-btn mt-6">Haan Bhai, Form dikhao</button>`;
         }
 
-        // Lead Form UI
-        function createLeadForm(schemeName) {
-            return `
-                <div class="ai-text">Bhai, ${schemeName} ke liye main aapki help kar sakta hoon. Bas apni details bhariye, hamari team aapko call karke guide karegi.</div>
-                <div class="lead-form">
-                    <p class="font-bold text-blue-600 mb-4 uppercase text-xs tracking-widest">Apply for Funding</p>
-                    <input type="text" id="lead-name" placeholder="Aapka Naam" class="form-input">
-                    <input type="tel" id="lead-phone" placeholder="WhatsApp Number" class="form-input">
-                    <button onclick="submitLead('${schemeName}')" class="form-btn">REQUEST CALLBACK</button>
-                </div>`;
+        // 2. Lead Form Render
+        window.showForm = (scheme) => {
+            appendUI(`<div class="premium-form">
+                        <p class="font-bold text-xs tracking-widest text-blue-600 mb-6 uppercase">Application for ${scheme}</p>
+                        <div class="input-group"><label>Full Name</label><input type="text" id="f-name"></div>
+                        <div class="input-group"><label>WhatsApp Number</label><input type="tel" id="f-phone"></div>
+                        <button onclick="submitData('${scheme}')" class="submit-btn w-full">Apply Now</button>
+                      </div>`);
+        };
+
+        window.submitData = (scheme) => {
+            const name = document.getElementById('f-name').value;
+            const phone = document.getElementById('f-phone').value;
+            alert(`Dhanyawad ${name} bhai. Humari team ${scheme} ke liye aapko call karegi.`);
+        };
+
+        // 3. Amazon Product Render with Visuals
+        function showProduct(name) {
+            // Using a high-quality placeholder that mimics real product search
+            const imgUrl = `https://source.unsplash.com/800x800/?${name}`;
+            return `<div class="ai-text">Bhai, maine aapke liye Amazon par sabse badiya **${name}** dekha hai. Iski photo dekhiye:</div>
+                    <div class="product-frame"><img src="${imgUrl}"></div>
+                    <div class="ai-text mt-4">Aap ise yahan se direct order kar sakte hain:</div>
+                    <a href="https://www.amazon.in/s?k=${name}&tag=${AFFILIATE_ID}" target="_blank" class="submit-btn inline-block mt-4">View on Amazon</a>`;
         }
 
-        async function submitLead(scheme) {
-            const name = document.getElementById('lead-name').value;
-            const phone = document.getElementById('lead-phone').value;
-            if(!name || !phone) return alert("Bhai, details toh bharo!");
-            
-            console.log("SENDING TO BACKEND:", { name, phone, scheme });
-            alert("Bhai, details mil gayi hain! Smile Finance ki team jaldi call karegi.");
-        }
-
-        async function send() {
+        async function handleInteraction(mode) {
             const q = userInput.value.trim();
             if(!q) return;
             appendUI(q, true);
@@ -141,11 +165,11 @@
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_ID}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are Smile Finance AI. 1. If user talks about funding/schemes/loans, reply with [FORM:SchemeName]. 2. If user wants a product, reply with [AMAZON:ProductName:ImageUrl]. 3. Talk like a 10Cr project owner. Friendly but Elite." },
+                            { role: "system", content: "You are the Human Intelligence of Smile Finance Solution. 1. If user asks for scheme/loan, explain it clearly in 3-4 lines first, then end with [KNOWLEDGE:SchemeName:Description]. 2. If user wants a product, end with [PRODUCT:Name]. 3. Talk like a 10Cr project owner—highly professional, friendly (Bhai). NO symbols." },
                             { role: "user", content: q }
                         ]
                     })
@@ -153,17 +177,18 @@
                 const data = await res.json();
                 let reply = data.choices[0].message.content;
 
-                if(reply.includes("[FORM:")) {
-                    const scheme = reply.split(":")[1].replace("]", "");
-                    appendUI(createLeadForm(scheme));
-                } else if(reply.includes("[AMAZON:")) {
+                if(reply.includes("[KNOWLEDGE:")) {
                     const parts = reply.split(":");
-                    appendUI(createAmazonCard(parts[1], parts[2] + ":" + parts[3].replace("]", "")));
+                    appendUI(showKnowledge(parts[1], parts[2].replace("]", "")));
+                } else if(reply.includes("[PRODUCT:")) {
+                    const name = reply.split(":")[1].replace("]", "");
+                    appendUI(showProduct(name));
                 } else {
                     appendUI(`<div class="ai-text">${reply}</div>`);
+                    if(mode === 'voice') speak(reply);
                 }
             } catch (e) {
-                appendUI(`<div class="ai-text">Bhai, thoda connection issue hai.</div>`);
+                appendUI(`<div class="ai-text">Bhai, network thoda dheela hai.</div>`);
             }
         }
     </script>

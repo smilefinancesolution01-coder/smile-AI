@@ -1,210 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Smile Hub AI</title>
-
-<style>
-:root{
-  --primary:#3b82f6;
-  --bg:#eef6ff;
-  --card:#ffffff;
-  --text:#1f2937;
-  --soft:#e5efff;
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: "Inter", system-ui, sans-serif;
-}
-
-body{
-  background:var(--bg);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* APP CONTAINER */
-.app{
-  width:100%;
-  max-width:420px;
-  height:100vh;
-  background:var(--card);
-  display:flex;
-  flex-direction:column;
-  box-shadow:0 20px 50px rgba(0,0,0,.08);
-}
-
-/* HEADER */
-.header{
-  padding:16px;
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  color:#fff;
-  text-align:center;
-  font-weight:600;
-  font-size:18px;
-}
-
-/* CHAT AREA */
-.chat{
-  flex:1;
-  padding:16px;
-  overflow-y:auto;
-}
-
-/* MESSAGE */
-.message{
-  max-width:80%;
-  margin-bottom:14px;
-  padding:12px 14px;
-  border-radius:14px;
-  font-size:14px;
-  line-height:1.4;
-}
-
-.user{
-  background:var(--soft);
-  align-self:flex-end;
-  border-bottom-right-radius:4px;
-}
-
-.ai{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  align-self:flex-start;
-  border-bottom-left-radius:4px;
-}
-
-/* INPUT */
-.input-area{
-  display:flex;
-  gap:8px;
-  padding:12px;
-  border-top:1px solid #e5e7eb;
-  background:#fff;
-}
-
-.input-area input{
-  flex:1;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #d1d5db;
-  outline:none;
-  font-size:14px;
-}
-
-.input-area button{
-  border:none;
-  padding:12px 14px;
-  border-radius:10px;
-  background:var(--primary);
-  color:#fff;
-  font-size:14px;
-}
-
-.mic{
-  background:#10b981;
-}
-
-/* LINK */
-.ai a{
-  color:#2563eb;
-  text-decoration:none;
-  font-weight:500;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smile Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background: #FFFFFF; font-family: 'Google Sans', sans-serif; height: 100dvh; display: flex; flex-direction: column; color: #1F1F1F; overflow: hidden; }
+        header { padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 500; color: #444746; }
+        .chat-container { flex: 1; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; gap: 24px; }
+        .ai-row { display: flex; gap: 12px; align-items: flex-start; }
+        .ai-icon { width: 30px; height: 30px; background: #f0f4f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0b57d0; flex-shrink: 0; }
+        .ai-content { font-size: 16px; line-height: 1.6; color: #1f1f1f; max-width: 90%; }
+        .user-row { align-self: flex-end; background: #e9eef6; padding: 10px 18px; border-radius: 20px; max-width: 80%; font-size: 16px; }
+        .input-area { padding: 8px 16px 20px 16px; }
+        .input-pill { background: #f0f4f9; border-radius: 32px; padding: 4px 8px 4px 18px; display: flex; align-items: center; min-height: 54px; }
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 16px; padding: 8px 0; }
+        .icon-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #444746; cursor: pointer; }
+        .mic-active { color: #d93025; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .chat-container::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-
 <body>
 
-<div class="app">
-  <div class="header">Smile Hub</div>
+    <header>
+        <div class="logo">Smile Hub</div>
+        <button class="bg-[#0b57d0] text-white px-5 py-1.5 rounded-full text-sm font-medium shadow-sm">Login</button>
+    </header>
 
-  <div class="chat" id="chat">
-    <div class="message ai">
-      👋 Welcome to Smile Hub  
-      <br/>Kaise ho aap? Bataiye main aapki kaise madad kar sakta hoon.
-    </div>
-  </div>
+    <main id="chat-box" class="chat-container">
+        <div class="ai-row">
+            <div class="ai-icon"><i class="fas fa-sparkles"></i></div>
+            <div class="ai-content">Bhai, kaise ho? Main Smile Hub hoon. Kuch poochna hai ya PDF analyze karun?</div>
+        </div>
+    </main>
 
-  <div class="input-area">
-    <input type="text" id="input" placeholder="Yahan likhiye..." />
-    <button onclick="send()">Send</button>
-    <button class="mic" onclick="voice()">🎤</button>
-  </div>
-</div>
+    <footer class="input-area">
+        <div class="max-w-3xl mx-auto">
+            <div id="file-label" class="hidden text-[10px] text-blue-600 font-bold mb-1 ml-4 tracking-wider">📁 PDF LOADED</div>
+            <div class="input-pill">
+                <input type="text" id="user-input" placeholder="Yahan likhein..." autocomplete="off">
+                <div class="flex items-center">
+                    <label for="pdf-up" class="icon-btn"><i class="far fa-plus-square"></i></label>
+                    <input type="file" id="pdf-up" class="hidden" accept=".pdf">
+                    <div id="mic-btn" class="icon-btn"><i class="fas fa-microphone"></i></div>
+                    <button onclick="handleAI('text')" class="icon-btn text-[#0b57d0]"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-<script>
-const chat = document.getElementById("chat");
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const micBtn = document.getElementById('mic-btn');
+        const GROQ_KEY = "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";
+        let pdfData = "";
+        let isVoiceMode = false;
 
-function addMessage(text,type){
-  const div=document.createElement("div");
-  div.className="message "+type;
-  div.innerHTML=text;
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
-}
+        // PDF Support
+        document.getElementById('pdf-up').onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                document.getElementById('file-label').classList.remove('hidden');
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    const typedarray = new Uint8Array(this.result);
+                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                    let text = "";
+                    for(let i=1; i<=pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        text += content.items.map(s => s.str).join(' ');
+                    }
+                    pdfData = text;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        };
 
-function send(){
-  const input=document.getElementById("input");
-  const text=input.value.trim();
-  if(!text) return;
+        // Voice Detection Logic
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'hi-IN';
+        micBtn.onclick = () => { rec.start(); micBtn.classList.add('mic-active'); };
+        rec.onresult = (e) => {
+            userInput.value = e.results[0][0].transcript;
+            micBtn.classList.remove('mic-active');
+            handleAI('voice'); // Set mode to voice
+        };
 
-  addMessage(text,"user");
-  input.value="";
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
+            utter.lang = 'hi-IN';
+            utter.rate = 1.1;
+            window.speechSynthesis.speak(utter);
+        }
 
-  setTimeout(()=>smartAI(text),700);
-}
+        function appendMsg(text, isUser, mode) {
+            const div = document.createElement('div');
+            div.className = isUser ? 'user-row' : 'ai-row';
+            if(isUser) {
+                div.innerHTML = text;
+            } else {
+                div.innerHTML = `<div class="ai-icon"><i class="fas fa-sparkles"></i></div><div class="ai-content">${text}</div>`;
+                if(mode === 'voice') speak(text); // Only speak if user used mic
+            }
+            chatBox.appendChild(div);
+            chatBox.scrollTo(0, chatBox.scrollHeight);
+        }
 
-/* ===== AI LOGIC (CONNECT YOUR REAL AI HERE) ===== */
-function smartAI(msg){
-  const text=msg.toLowerCase();
+        async function handleAI(mode) {
+            const msg = userInput.value.trim();
+            if(!msg) return;
+            appendMsg(msg, true, mode);
+            userInput.value = '';
 
-  // AMAZON PRODUCT FLOW
-  if(text.includes("buy") || text.includes("mobile") || text.includes("amazon")){
-    addMessage(
-      "Main aapke liye sahi product dhundh raha hoon 👇<br><br>" +
-      "<a href='#' onclick='openAmazon()'>Amazon par dekhiye</a>",
-      "ai"
-    );
-  }
+            const loader = document.createElement('div');
+            loader.className = 'ai-row opacity-40';
+            loader.innerHTML = `<div class="ai-icon animate-pulse"><i class="fas fa-sparkles"></i></div><div class="ai-content italic">Thinking...</div>`;
+            chatBox.appendChild(loader);
 
-  // FINANCIAL / SCHEME FLOW
-  else if(text.includes("loan") || text.includes("scheme") || text.includes("finance")){
-    addMessage(
-      "Main aapki madad kar sakta hoon. Ek chhota sa form fill kijiye.",
-      "ai"
-    );
-    setTimeout(openForm,800);
-  }
-
-  // NORMAL TALK
-  else{
-    addMessage(
-      "Samajh gaya 👍 Main aapki madad kar raha hoon.",
-      "ai"
-    );
-  }
-}
-
-/* PLACEHOLDERS */
-function openAmazon(){
-  alert("Yahan real Amazon Affiliate link open hoga");
-}
-
-function openForm(){
-  alert("Yahan Firebase connected form open hoga");
-}
-
-function voice(){
-  alert("Speech to Text integrate hoga");
-}
-</script>
-
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            { role: "system", content: "You are Smile Hub AI. Speak like a professional friend (Bhai). Keep it short and clean. For loans/finance, guide to landing page. PDF Data: " + pdfData },
+                            { role: "user", content: msg }
+                        ]
+                    })
+                });
+                const data = await res.json();
+                loader.remove();
+                appendMsg(data.choices[0].message.content, false, mode);
+            } catch (e) {
+                loader.remove();
+                appendMsg("Bhai, network issue hai.", false, mode);
+            }
+        }
+    </script>
 </body>
 </html>

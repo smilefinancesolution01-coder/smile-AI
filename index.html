@@ -3,136 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smile Finance AI</title>
+    <title>Smile Hub AI | Voice-to-Voice</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background: #F4F9FF; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; }
-        .chat-area { flex: 1; overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
-        .ai-bubble { background: white; border: 1px solid #E2E8F0; border-radius: 20px 20px 20px 5px; font-size: 17px; color: #1A202C; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .user-bubble { background: #007BFF; color: white; border-radius: 20px 20px 5px 20px; font-size: 17px; box-shadow: 0 4px 12px rgba(0,123,255,0.2); }
-        .input-box { background: white; border-top: 1px solid #E2E8F0; padding: 12px 16px; padding-bottom: env(safe-area-inset-bottom, 20px); }
-        .typing-dot { width: 6px; height: 6px; background: #94A3B8; border-radius: 50%; display: inline-block; animation: blink 1.4s infinite; margin-right: 3px; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        :root { --primary-blue: #007BFF; --bg-light: #F4F9FF; }
+        body { background: var(--bg-light); font-family: 'Plus Jakarta Sans', sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-container { flex: 1; overflow-y: auto; padding: 20px 16px; scroll-behavior: smooth; }
+        .ai-bubble { background: #FFFFFF; color: #1F2937; border-radius: 20px 20px 20px 4px; padding: 14px 18px; max-width: 88%; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px; font-size: 16px; line-height: 1.6; }
+        .user-bubble { background: var(--primary-blue); color: white; border-radius: 20px 20px 4px 20px; padding: 12px 18px; max-width: 82%; margin-left: auto; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0, 123, 255, 0.15); }
+        .bottom-nav { background: white; border-top: 1px solid #E5EAF2; padding: 12px 16px 30px 16px; }
+        .search-pill { background: #F0F4F9; border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; border: 1px solid transparent; }
+        .icon-btn { color: #5F6368; padding: 10px; font-size: 22px; cursor: pointer; transition: 0.2s; }
+        .mic-active { color: #EA4335; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <nav class="bg-white/90 backdrop-blur-md p-4 border-b flex justify-between items-center sticky top-0 z-50">
+    <header class="bg-white/90 backdrop-blur-md px-4 py-3 flex justify-between items-center border-b sticky top-0 z-50">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg"><i class="fas fa-smile"></i></div>
-            <div>
-                <h1 class="font-bold text-gray-800 text-lg">Smile Finance AI</h1>
-                <p class="text-[10px] text-blue-500 font-bold tracking-widest uppercase">Groq Super-Fast</p>
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg"><i class="fas fa-smile-beam text-xl"></i></div>
+            <div><h1 class="font-bold text-gray-800 text-lg">Smile Hub</h1><p class="text-[10px] text-blue-500 font-bold tracking-widest uppercase">Human AI Voice</p></div>
+        </div>
+        <button onclick="handleLogin()" class="bg-blue-600 text-white px-5 py-1.5 rounded-full text-sm font-bold shadow-md">Login</button>
+    </header>
+
+    <main id="chat-box" class="chat-container">
+        <div class="ai-bubble">Bhai, Namaste! 🙏 Main <b>Smile Hub AI</b> hoon. Main aapki baatein sun bhi sakta hoon aur jawab bolkar bhi de sakta hoon. Bataiye, kya help karun?</div>
+    </main>
+
+    <footer class="bottom-nav">
+        <div class="max-w-3xl mx-auto">
+            <div class="search-pill">
+                <i class="far fa-file-pdf icon-btn"></i>
+                <i id="micBtn" class="fas fa-microphone icon-btn mx-1" title="Tap to Speak"></i>
+                <input type="text" id="userInput" placeholder="Kuch boliye ya likhiye..." class="flex-1 bg-transparent border-none outline-none px-3 text-[16px]">
+                <button onclick="processInput()" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition"><i class="fas fa-arrow-up"></i></button>
             </div>
         </div>
-        <div class="flex gap-4 items-center">
-            <label class="cursor-pointer text-gray-400 hover:text-red-500 transition">
-                <i class="fas fa-file-pdf text-xl"></i>
-                <input type="file" id="pdfInput" class="hidden" accept=".pdf">
-            </label>
-            <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"><i class="fas fa-user text-gray-500"></i></div>
-        </div>
-    </nav>
-
-    <div id="chat-box" class="chat-area flex flex-col space-y-5">
-        <div class="ai-bubble p-4 max-w-[85%]">
-            Bhai, Namaste! 🙏 Main <b>Smile Finance AI</b> hoon. <br><br>
-            Maine Groq API connect kar li hai, ab main superfast reply dunga! Koi PDF hai analyze karne ke liye ya loan ki koi baat karni hai? Dost samajh kar poocho!
-        </div>
-    </div>
-
-    <div class="input-box">
-        <div id="pdf-status" class="hidden text-xs text-orange-600 mb-2 font-bold px-2">📁 PDF Selected: Taiyar hoon analyze karne ke liye!</div>
-        <div class="max-w-4xl mx-auto flex items-center bg-gray-100 rounded-3xl px-4 py-1 border focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-            <button class="text-blue-500 p-2"><i class="fas fa-microphone fa-lg"></i></button>
-            <input type="text" id="user-input" placeholder="Yahan likhein..." class="flex-1 bg-transparent border-none outline-none py-3 text-md">
-            <button onclick="chatWithGroq()" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md active:scale-95 transition">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
+    </footer>
 
     <script>
-        const GROQ_API_KEY = "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";
         const chatBox = document.getElementById('chat-box');
-        let pdfText = "";
+        const userInput = document.getElementById('userInput');
+        const micBtn = document.getElementById('micBtn');
 
-        // PDF Reader Logic
-        document.getElementById('pdfInput').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById('pdf-status').classList.remove('hidden');
-                const reader = new FileReader();
-                reader.onload = async function() {
-                    const typedarray = new Uint8Array(this.result);
-                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                    let fullText = "";
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const textContent = await page.getTextContent();
-                        fullText += textContent.items.map(s => s.str).join(' ');
-                    }
-                    pdfText = fullText;
-                    appendMsg("Bhai, maine PDF padh li hai! Ab aap isse jude sawal pooch sakte ho.", false);
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        });
+        // --- Voice-to-Voice Logic ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const synth = window.speechSynthesis;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hi-IN'; // Default Hindi, but detects Hinglish well
+
+            micBtn.onclick = () => {
+                recognition.start();
+                micBtn.classList.add('mic-active');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                micBtn.classList.remove('mic-active');
+                processInput();
+            };
+
+            recognition.onerror = () => micBtn.classList.remove('mic-active');
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'hi-IN';
+            utterance.rate = 1.0; 
+            synth.speak(utterance);
+        }
 
         function appendMsg(text, isUser) {
             const div = document.createElement('div');
-            div.className = isUser ? "flex justify-end" : "flex justify-start";
-            div.innerHTML = `<div class="${isUser ? 'user-bubble' : 'ai-bubble'} p-4 max-w-[85%] shadow-sm">${text}</div>`;
+            div.className = isUser ? 'user-bubble' : 'ai-bubble';
+            div.innerHTML = text;
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
+            if (!isUser) speak(text.replace(/<[^>]*>/g, '')); // AI speaks the text
         }
 
-        async function chatWithGroq() {
-            const input = document.getElementById('user-input');
-            const message = input.value.trim();
-            if (!message) return;
+        async function processInput() {
+            const text = userInput.value.trim();
+            if (!text) return;
 
-            appendMsg(message, true);
-            input.value = "";
+            appendMsg(text, true);
+            userInput.value = '';
 
-            // Show Typing...
-            const loader = document.createElement('div');
-            loader.className = "ai-bubble p-4 w-16 flex gap-1";
-            loader.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-            chatBox.appendChild(loader);
-
-            try {
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${GROQ_API_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [
-                            { role: "system", content: "You are Smile Finance AI, a friendly peer/friend. Help with loans (HDFC, Poonawalla). If user asks for loan, tell them to visit landing page. Analyze PDF text if provided. Keep it human-like, use 'Bhai' often. Amazon ID: smileai24-21." },
-                            { role: "user", content: pdfText ? `PDF Context: ${pdfText} \n\n User Question: ${message}` : message }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-                loader.remove();
-                let aiReply = data.choices[0].message.content;
-                
-                // Vision Logic: Suggest Landing Page instead of direct links
-                if(aiReply.toLowerCase().includes("http")) {
-                    aiReply = aiReply.replace(/https?:\/\/[^\s]+/g, '<b>Smile Service Page</b>');
+            // AI Logic Simulation
+            setTimeout(() => {
+                let reply = "";
+                if(text.toLowerCase().includes("loan")) {
+                    reply = "Bhai, loan ke liye tension mat lo. Hamare paas HDFC aur Poonawalla ke badhiya options hain. Main ek form open kar raha hoon, usey bhar dein.";
+                } else if(text.toLowerCase().includes("buy") || text.toLowerCase().includes("amazon")) {
+                    reply = "Bhai, ye toh bahut badhiya product hai! Main aapko seedha Amazon landing page par le chalta hoon.";
+                } else {
+                    reply = "Bhai, main samajh raha hoon. Main hamesha aapki financial health ke liye sahi salaah dunga. Aur kuch batana chahoge?";
                 }
+                appendMsg(reply, false);
+            }, 1000);
+        }
 
-                appendMsg(aiReply, false);
-            } catch (error) {
-                loader.remove();
-                appendMsg("Bhai, network mein kuch dikat aa gayi. Ek baar fir try karein?", false);
-            }
+        function handleLogin() {
+            alert("Bhai, Firebase Login setup agle step mein karenge! Taiyar ho?");
         }
     </script>
 </body>

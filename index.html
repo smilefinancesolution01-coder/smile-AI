@@ -3,238 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Finance Solution AI</title>
+    <title>Smile Finance AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --soft-blue: #f0f7ff; --deep-blue: #0061FF; }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        :root { --blue: #0061FF; --bg-gradient: linear-gradient(180deg, #E3F2FD 0%, #FFFFFF 100%); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            background: linear-gradient(135deg, #e0eefc 0%, #f0f7ff 100%); 
-            font-family: 'Outfit', sans-serif;
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
-            color: #1a1a1a; margin: 0;
+        body, html { 
+            height: 100%; margin: 0; padding: 0; overflow: hidden;
+            font-family: 'Outfit', sans-serif; background: var(--bg-gradient);
         }
 
-        /* Institutional Header */
+        /* 10Cr Header: Fixed at top */
         header { 
-            padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 97, 255, 0.05);
+            height: 70px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .logo { font-size: 20px; font-weight: 600; color: #003d99; letter-spacing: -0.5px; }
+        .brand-text { font-size: 18px; font-weight: 600; color: #004BA0; }
 
-        /* The Gemini-Scale Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 40px; }
-        .canvas::-webkit-scrollbar { display: none; }
+        /* Scrollable Chat Area: Prevents bottom overlap */
+        .chat-container { 
+            height: calc(100vh - 160px); overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 25px; scroll-behavior: smooth;
+        }
+        .chat-container::-webkit-scrollbar { display: none; }
 
-        /* Gemini-Style Typography (Large & Clean) */
-        .msg-container { max-width: 100%; animation: softReveal 0.6s ease; }
-        @keyframes softReveal { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        .ai-text { font-size: 24px; line-height: 1.6; font-weight: 400; color: #1a1a1a; }
-        .user-text { 
-            font-size: 22px; color: #555; text-align: right; 
-            background: rgba(255,255,255,0.5); padding: 12px 24px; 
-            border-radius: 20px; align-self: flex-end; display: inline-block;
+        /* Gemini-Standard Typography (Responsive) */
+        .ai-bubble { font-size: 19px; line-height: 1.5; color: #1F1F1F; max-width: 95%; font-weight: 400; }
+        .user-bubble { 
+            font-size: 18px; background: #F0F4F9; padding: 12px 18px; 
+            border-radius: 20px; align-self: flex-end; max-width: 85%; color: #444;
         }
 
-        /* Premium Product Card */
-        .product-card {
-            background: #ffffff; border-radius: 32px; overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-            margin-top: 25px; border: 1px solid rgba(0, 97, 255, 0.1);
-            max-width: 400px; animation: slideUp 0.8s ease;
+        /* The "Fixed-Visible" Input Engine */
+        .bottom-bar { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            padding: 10px 15px 30px 15px; /* Extra bottom padding for mobile browsers */
+            background: white; border-top: 1px solid #eee;
         }
-        @keyframes slideUp { from { opacity: 0; scale: 0.95; } to { opacity: 1; scale: 1; } }
-        .product-img { width: 100%; height: 280px; object-fit: contain; background: #fff; padding: 20px; }
-        .product-content { padding: 24px; border-top: 1px solid #f0f0f0; }
-        .amazon-btn { 
-            background: #FF9900; color: white; display: block; text-align: center; 
-            padding: 18px; border-radius: 16px; font-weight: 700; font-size: 16px;
-            box-shadow: 0 10px 20px rgba(255, 153, 0, 0.2);
-        }
-
-        /* Premium Form (Funding/Schemes) */
-        .form-box {
-            background: #ffffff; padding: 32px; border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04); margin-top: 20px;
-            max-width: 500px; border: 1px solid #e1e8f0;
-        }
-        .form-input { 
-            width: 100%; padding: 18px; border-radius: 16px; border: 1.5px solid #edf2f7; 
-            margin-bottom: 15px; font-size: 18px; outline: none; transition: 0.3s;
-        }
-        .form-input:focus { border-color: var(--deep-blue); background: var(--soft-blue); }
-        .submit-btn { 
-            background: var(--deep-blue); color: white; width: 100%; 
-            padding: 18px; border-radius: 16px; font-weight: 600; font-size: 18px;
-        }
-
-        /* Master Control Pill (Mobile Friendly) */
-        .control-area { padding: 20px 20px 40px; background: transparent; }
         .input-pill { 
-            background: #ffffff; border-radius: 100px; padding: 8px 12px;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            background: #F0F4F9; border-radius: 30px; display: flex; align-items: center; 
+            padding: 5px 5px 5px 15px; height: 56px;
         }
-        input#query-input { 
-            flex: 1; border: none; outline: none; padding-left: 20px;
-            font-size: 20px; height: 60px; background: transparent;
-        }
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 17px; color: #000; }
 
-        .action-icon { 
-            width: 54px; height: 54px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s;
+        /* Professional Buttons */
+        .btn-icon { 
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: #444; cursor: pointer;
         }
-        .mic-active { color: #0061FF; background: #eef6ff; }
-        .send-active { background: #1a1a1a; color: #fff !important; }
+        .send-btn { background: #1F1F1F; color: white !important; margin-left: 8px; }
 
-        .thinking { font-size: 16px; color: #0061FF; font-weight: 500; margin-left: 5px; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        /* Visual Product Card */
+        .product-card { 
+            background: white; border-radius: 25px; padding: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #eee; margin-top: 10px;
+        }
+        .product-img { width: 100%; border-radius: 15px; margin-bottom: 10px; max-height: 220px; object-fit: contain; }
+        .amz-btn { 
+            background: #FF9900; color: white; display: block; text-align: center; 
+            padding: 14px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 15px;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Smile Finance Solution AI</div>
-        <div class="flex items-center gap-3">
-            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">10CR ENGINE</span>
-            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">S</div>
+        <div class="brand-text">Smile Finance AI</div>
+        <div class="flex items-center gap-2">
+            <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">10CR ENGINE</span>
+            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">S</div>
         </div>
     </header>
 
-    <main id="chat-canvas" class="canvas">
-        <div class="msg-container">
-            <div class="ai-text">Namaste bhai. Smile Finance Solution mein aapka swagat hai. Main aapki Govt Funding, Loans ya Amazon Shopping mein vistar se madad kar sakta hoon. Aaj kya help karun?</div>
-        </div>
+    <main class="chat-container" id="chat">
+        <div class="ai-bubble">Namaste bhai. Smile Finance Solution mein aapka swagat hai. Main aapki Govt Funding aur Loans mein help kar sakta hoon. Bataiye aaj kya help karun?</div>
     </main>
 
-    <footer class="control-area">
+    <footer class="bottom-bar">
         <div class="input-pill">
-            <label for="doc-upload" class="action-icon text-gray-400"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
-            <input type="file" id="doc-upload" class="hidden" accept=".pdf">
+            <label for="f" class="btn-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
+            <input type="file" id="f" class="hidden">
             
-            <input type="text" id="query-input" placeholder="Yahan shuru karein..." autocomplete="off">
+            <input type="text" id="in" placeholder="Yahan shuru karein..." autocomplete="off">
             
-            <div id="mic-trigger" class="action-icon text-gray-400"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+            <div id="mic" class="btn-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
             
-            <button onclick="handleFlow('text')" class="action-icon send-active"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+            <button onclick="ask()" class="btn-icon send-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
         </div>
     </footer>
 
     <script>
-        const canvas = document.getElementById('chat-canvas');
-        const input = document.getElementById('query-input');
-        const mic = document.getElementById('mic-trigger');
-        const GROQ_KEY = "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";
-        const AFFILIATE = "smileai24-21";
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('in');
+        const mic = document.getElementById('mic');
+        const KEY = "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";
+        const AMZ = "smileai24-21";
 
-        // Voice Engine (Speaks back if mic used)
-        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Rec) {
-            const recognition = new Rec();
-            recognition.lang = 'hi-IN';
-            mic.onclick = () => { recognition.start(); mic.classList.add('mic-active'); };
-            recognition.onresult = (e) => {
-                input.value = e.results[0][0].transcript;
-                mic.classList.remove('mic-active');
-                handleFlow('voice');
-            };
+        // Logic for Mic
+        const Reco = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(Reco) {
+            const r = new Reco(); r.lang = 'hi-IN';
+            mic.onclick = () => { r.start(); mic.style.color = 'blue'; };
+            r.onresult = (e) => { input.value = e.results[0][0].transcript; ask(); mic.style.color = '#444'; };
         }
 
-        function speak(text) {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
-            utter.lang = 'hi-IN'; utter.rate = 1.0;
-            window.speechSynthesis.speak(utter);
+        function render(html, isUser = false) {
+            const d = document.createElement('div');
+            d.className = isUser ? 'user-bubble' : 'ai-bubble';
+            d.innerHTML = html;
+            chat.appendChild(d);
+            chat.scrollTo(0, chat.scrollHeight);
         }
 
-        function appendUI(html, isUser = false) {
-            const div = document.createElement('div');
-            div.className = isUser ? 'msg-container flex flex-col' : 'msg-container';
-            div.innerHTML = isUser ? `<div class="user-text">${html}</div>` : html;
-            canvas.appendChild(div);
-            canvas.scrollTo({top: canvas.scrollHeight, behavior: 'smooth'});
-        }
-
-        // Logic for Amazon Product (Human Nature)
-        function amazonUI(name, desc) {
-            const img = `https://source.unsplash.com/800x800/?${name}`;
-            return `
-                <div class="ai-text">Bhai, maine aapke liye Amazon par ye **${name}** dekha hai. Ye iska look hai:</div>
-                <div class="product-card">
-                    <img src="${img}" class="product-img">
-                    <div class="product-content">
-                        <p class="ai-text" style="font-size:20px; font-weight:600;">${name}</p>
-                        <p class="text-gray-500 mb-6" style="font-size:16px;">${desc}</p>
-                        <a href="https://www.amazon.in/s?k=${name}&tag=${AFFILIATE}" target="_blank" class="amazon-btn">SHOP ON AMAZON</a>
-                    </div>
-                </div>`;
-        }
-
-        // Logic for Govt Funding (Knowledge first)
-        function fundingUI(title, detail) {
-            return `
-                <div class="ai-text">Bhai, **${title}** ke baare mein vistar se samjhiye:<br><br>${detail}</div>
-                <div class="form-box">
-                    <p class="text-blue-600 font-bold text-xs tracking-widest mb-4 uppercase">Smile Solution Callback</p>
-                    <input type="text" id="c-name" placeholder="Aapka Naam" class="form-input">
-                    <input type="tel" id="c-phone" placeholder="WhatsApp Number" class="form-input">
-                    <button onclick="submitLead('${title}')" class="submit-btn">Bhai, mujhe call karo</button>
-                </div>`;
-        }
-
-        async function submitLead(scheme) {
-            const n = document.getElementById('c-name').value;
-            const p = document.getElementById('c-phone').value;
-            if(n && p) alert(`Bhai ${n}, Smile Finance team ${scheme} ke liye aapko call karegi!`);
-        }
-
-        async function handleFlow(mode) {
+        async function ask() {
             const q = input.value.trim();
             if(!q) return;
-            appendUI(q, true);
+            render(q, true);
             input.value = '';
-
-            const loader = document.createElement('div');
-            loader.className = 'thinking'; loader.innerText = 'Reflecting...';
-            canvas.appendChild(loader);
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [
-                            { role: "system", content: "You are Smile Finance AI. Vision: Human-like, professional, friend (Bhai). 1. If user wants a product, give a short nice desc and end with [PRODUCT:Name:Description]. 2. If user wants loan/scheme, explain clearly in 4 lines and end with [FUNDING:Title:Details]. 3. Large fonts (Gemini size). NO symbols." },
-                            { role: "user", content: q }
-                        ]
+                        messages: [{ role: "system", content: "You are Smile Finance AI. Professional friend. For products give [PROD:Name]. Large fonts." }, { role: "user", content: q }]
                     })
                 });
                 const data = await res.json();
-                loader.remove();
-                let reply = data.choices[0].message.content;
+                let txt = data.choices[0].message.content;
 
-                if(reply.includes("[PRODUCT:")) {
-                    const parts = reply.split(":");
-                    appendUI(amazonUI(parts[1], parts[2].replace("]", "")));
-                } else if(reply.includes("[FUNDING:")) {
-                    const parts = reply.split(":");
-                    appendUI(fundingUI(parts[1], parts[2].replace("]", "")));
+                if(txt.includes("[PROD:")) {
+                    const name = txt.split(":")[1].replace("]", "");
+                    render(`Bhai, ye raha aapka ${name}:<div class="product-card"><img src="https://source.unsplash.com/800x600/?${name}" class="product-img"><a href="https://www.amazon.in/s?k=${name}&tag=${AMZ}" class="amz-btn">Shop on Amazon</a></div>`);
                 } else {
-                    appendUI(`<div class="ai-text">${reply}</div>`);
-                    if(mode === 'voice') speak(reply);
+                    render(txt);
                 }
-            } catch (e) {
-                loader.remove();
-                appendUI(`<div class="ai-text">Bhai, connection thoda slow hai.</div>`);
-            }
+            } catch (e) { render("Bhai, thoda wait karein."); }
         }
     </script>
 </body>

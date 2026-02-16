@@ -3,99 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Hub | Excellence</title>
+    <title>Smile Hub | 10Cr Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --accent: #0061FF; --glass: rgba(255, 255, 255, 0.8); }
+        :root { --bg: #ffffff; --text: #050505; --accent: #2563eb; }
         body { 
-            background: #FFFFFF; 
-            font-family: 'Outfit', sans-serif;
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
-            color: #121212; letter-spacing: -0.02em;
+            background: var(--bg); font-family: 'Outfit', sans-serif;
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: var(--text);
         }
 
-        /* 5Cr Stealth Header */
+        /* 10Cr Signature Header */
         header { 
-            padding: 24px 32px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(10px); z-index: 100;
+            padding: 25px 5%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 0.5px solid rgba(0,0,0,0.05);
         }
-        .brand { font-size: 24px; font-weight: 600; color: #121212; display: flex; align-items: center; gap: 10px; }
-        .brand span { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+        .brand { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+        .secure-tag { font-size: 10px; border: 1px solid #ddd; padding: 2px 8px; border-radius: 4px; color: #888; }
 
-        /* Luxury Conversation Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 20px 8% 100px 8%; scroll-behavior: smooth; }
+        /* The Intelligent Canvas */
+        .canvas { flex: 1; overflow-y: auto; padding: 40px 10%; display: flex; flex-direction: column; scroll-behavior: smooth; }
         .canvas::-webkit-scrollbar { display: none; }
 
-        /* The "Human" Message Row */
-        .row { margin-bottom: 48px; display: flex; flex-direction: column; animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* Multi-Million Dollar Typography */
+        .msg-row { margin-bottom: 50px; width: 100%; animation: reveal 0.8s ease-out; }
         @keyframes reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ai-label { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .content { font-size: 22px; line-height: 1.5; font-weight: 400; color: #121212; max-width: 800px; }
-        
+        .ai-text { font-size: 26px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; max-width: 900px; }
         .user-row { align-self: flex-end; text-align: right; }
-        .user-content { 
-            background: #F2F2F7; padding: 16px 28px; border-radius: 30px; 
-            font-size: 20px; color: #121212; display: inline-block;
-        }
+        .user-text { font-size: 20px; color: #777; font-weight: 400; line-height: 1.4; }
 
-        /* The Master Input (Gemini 2.0 Style) */
-        .footer-box { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px 8% 40px 8%; background: linear-gradient(transparent, #FFF 40%); }
-        .pill-wrap { 
-            background: #F9F9FB; border: 1px solid rgba(0,0,0,0.04);
-            border-radius: 40px; padding: 8px 12px 8px 32px;
-            display: flex; align-items: center; gap: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
-            transition: all 0.4s ease;
-        }
-        .pill-wrap:focus-within { background: #FFF; box-shadow: 0 30px 60px rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.1); }
+        /* Feature Badge */
+        .badge { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 10px; display: inline-block; text-transform: uppercase; letter-spacing: 2px; }
 
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 19px; height: 56px; color: #121212; }
+        /* The 10Cr Floating Command Center */
+        .cmd-center { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 10%; z-index: 50; }
+        .pill { 
+            background: #f8f9fa; border: 1px solid rgba(0,0,0,0.03); border-radius: 40px;
+            padding: 10px 15px 10px 35px; display: flex; align-items: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05); transition: 0.4s;
+        }
+        .pill:focus-within { background: #fff; box-shadow: 0 40px 80px rgba(0,0,0,0.1); border-color: #eee; }
+
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 20px; height: 60px; color: var(--text); }
         
-        .icon-btn { 
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; 
-            color: #121212; cursor: pointer; border-radius: 50%; transition: 0.3s;
+        .btn { 
+            width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.3s; color: #222;
         }
-        .icon-btn:hover { background: #ECECED; }
-        .send-btn { background: #121212; color: white !important; }
+        .btn:hover { background: #eee; }
+        .primary-btn { background: var(--text); color: #fff !important; }
 
-        /* Intelligent Loading */
-        .thought-dot { width: 6px; height: 6px; background: #D1D1D6; border-radius: 50%; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.5); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
+        /* Loader Animation */
+        .dot { width: 5px; height: 5px; background: #222; border-radius: 50%; animation: bounce 1s infinite alternate; }
+        @keyframes bounce { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand"><span></span> Smile Hub</div>
-        <div class="flex items-center gap-6">
-            <i class="far fa-calendar-alt text-xl text-gray-400"></i>
-            <button class="bg-[#121212] text-white px-7 py-2.5 rounded-full text-sm font-medium tracking-tight">Access Pro</button>
+        <div class="brand">Smile Finance Solution</div>
+        <div class="flex items-center gap-4">
+            <span class="secure-tag">ENCRYPTED</span>
+            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-500">S</div>
         </div>
     </header>
 
     <main id="chat-box" class="canvas">
-        <div class="row">
-            <p class="ai-label">Intelligence</p>
-            <div class="content">Namaste bhai. Main aapka personal guide hoon. Aaj hum kis baare mein baat karein?</div>
+        <div class="msg-row">
+            <span class="badge">Intelligence Active</span>
+            <div class="ai-text">Namaste bhai. Smile Hub Pro mein aapka swagat hai. Aaj hum kis financial scheme ya compliance par baat shuru karein? Main sun raha hoon.</div>
         </div>
     </main>
 
-    <footer class="footer-box">
-        <div class="max-w-5xl mx-auto">
-            <div id="pdf-alert" class="hidden text-[11px] font-bold text-blue-600 mb-3 ml-6">PREMIUM DOCUMENT ANALYZER ACTIVE</div>
-            <div class="pill-wrap">
-                <input type="text" id="user-input" placeholder="Kuch baat karte hain..." autocomplete="off">
-                <div class="flex items-center gap-1">
-                    <label for="pdf-in" class="icon-btn"><i class="fas fa-plus text-lg"></i></label>
-                    <input type="file" id="pdf-in" class="hidden" accept=".pdf">
-                    <div id="mic-btn" class="icon-btn"><i class="fas fa-microphone text-lg"></i></div>
-                    <button onclick="execute('text')" class="icon-btn send-btn"><i class="fas fa-arrow-up"></i></button>
-                </div>
+    <footer class="cmd-center">
+        <div id="file-tag" class="hidden text-[11px] font-bold text-blue-600 mb-3 ml-6 uppercase tracking-widest">Doc Analysis Enabled</div>
+        <div class="pill">
+            <input type="text" id="user-input" placeholder="Aapka financial partner yahan hai..." autocomplete="off">
+            <div class="flex items-center gap-2">
+                <label for="pdf-file" class="btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
+                <input type="file" id="pdf-file" class="hidden" accept=".pdf">
+                
+                <div id="mic-btn" class="btn"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+                
+                <button onclick="askAI('text')" class="btn primary-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
             </div>
         </div>
     </footer>
@@ -104,14 +97,14 @@
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const micBtn = document.getElementById('mic-btn');
-        const GROQ_SECRET = "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";
-        let context = "";
+        const API_KEY = "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";
+        let pdfData = "";
 
         // PDF Context Engine
-        document.getElementById('pdf-in').onchange = async (e) => {
+        document.getElementById('pdf-file').onchange = async (e) => {
             const file = e.target.files[0];
             if(file) {
-                document.getElementById('pdf-alert').classList.remove('hidden');
+                document.getElementById('file-tag').classList.remove('hidden');
                 const reader = new FileReader();
                 reader.onload = async function() {
                     const typedarray = new Uint8Array(this.result);
@@ -122,22 +115,21 @@
                         const content = await page.getTextContent();
                         text += content.items.map(s => s.str).join(' ');
                     }
-                    context = text;
+                    pdfData = text;
                 };
                 reader.readAsArrayBuffer(file);
             }
         };
 
-        // Advanced Voice mode
+        // Premium Voice Engine
         const Recog = window.SpeechRecognition || window.webkitSpeechRecognition;
         if(Recog) {
-            const r = new Recog();
-            r.lang = 'hi-IN';
-            micBtn.onclick = () => { r.start(); micBtn.style.color = '#0061FF'; };
+            const r = new Recog(); r.lang = 'hi-IN';
+            micBtn.onclick = () => { r.start(); micBtn.style.color = '#2563eb'; };
             r.onresult = (e) => {
                 userInput.value = e.results[0][0].transcript;
-                micBtn.style.color = '#121212';
-                execute('voice');
+                micBtn.style.color = '#222';
+                askAI('voice');
             };
         }
 
@@ -148,49 +140,48 @@
             window.speechSynthesis.speak(utter);
         }
 
-        function append(text, isUser, isVoice) {
+        function renderMessage(text, isUser, useVoice) {
             const div = document.createElement('div');
-            div.className = isUser ? 'row user-row' : 'row';
-            
+            div.className = isUser ? 'msg-row user-row' : 'msg-row';
             if(isUser) {
-                div.innerHTML = `<div class="user-content">${text}</div>`;
+                div.innerHTML = `<div class="user-text">${text}</div>`;
             } else {
-                div.innerHTML = `<p class="ai-label">Smile Hub AI</p><div class="content">${text}</div>`;
-                if(isVoice) speak(text);
+                div.innerHTML = `<span class="badge">Smile AI Response</span><div class="ai-text">${text}</div>`;
+                if(useVoice) speak(text);
             }
             chatBox.appendChild(div);
             chatBox.scrollTo({top: chatBox.scrollHeight, behavior: 'smooth'});
         }
 
-        async function execute(mode) {
+        async function askAI(mode) {
             const q = userInput.value.trim();
             if(!q) return;
-            append(q, true, false);
+            renderMessage(q, true, false);
             userInput.value = '';
 
             const loader = document.createElement('div');
             loader.className = 'flex gap-2 p-4';
-            loader.innerHTML = '<div class="thought-dot"></div><div class="thought-dot" style="animation-delay:0.2s"></div>';
+            loader.innerHTML = '<div class="dot"></div><div class="dot" style="animation-delay:0.2s"></div><div class="dot" style="animation-delay:0.4s"></div>';
             chatBox.appendChild(loader);
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_SECRET}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are a highly sophisticated human companion. Talk like a multi-millionaire friend. 1. Never mention banks initially. 2. Understand user's emotional or financial pain. 3. If they need help, suggest the landing page of 'Smile Finance Solution' which partners with top banks (Poonawalla, HDFC). 4. Use large, elegant Hindi/Hinglish. PDF: " + context },
+                            { role: "system", content: "You are the Intelligence of Smile Finance Solution. 1. You provide Govt Scheme funding, loans, and compliance support. 2. Your Amazon ID is smileai24-21. 3. Talk like a 10Cr project owner—highly professional, friendly friend (Bhai). 4. Use large, clean fonts. 5. Analyze user's trouble and suggest landing pages. PDF Data: " + pdfData },
                             { role: "user", content: q }
                         ]
                     })
                 });
                 const data = await res.json();
                 loader.remove();
-                append(data.choices[0].message.content, false, mode === 'voice');
+                renderMessage(data.choices[0].message.content, false, mode === 'voice');
             } catch (e) {
                 loader.remove();
-                append("Kshama karein bhai, connection mein thodi deri ho gayi.", false, false);
+                renderMessage("Bhai, network issue hai, fir se bolna.", false, false);
             }
         }
     </script>

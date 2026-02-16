@@ -3,126 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Hub | Pro</title>
+    <title>Smile Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --accent: #007AFF; --bg: #f5f5f7; }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { 
-            background: radial-gradient(circle at top right, #eef2ff, #f5f5f7); 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: #1d1d1f;
+            background: #FFFFFF; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+            color: #1F1F1F;
         }
 
-        /* Luxury Header */
-        header { 
-            padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(245, 245, 247, 0.7); backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 0.5px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
-        }
-        .logo-text { font-weight: 600; font-size: 22px; letter-spacing: -0.5px; background: linear-gradient(135deg, #1d1d1f 0%, #434343 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Minimal Gemini-Style Header */
+        header { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 500; color: #444746; letter-spacing: -0.5px; }
 
-        /* Smooth Chat Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 24px; scrollbar-width: none; -ms-overflow-style: none; }
+        /* The Conversation Canvas */
+        .canvas { flex: 1; overflow-y: auto; padding: 10px 24px; display: flex; flex-direction: column; gap: 40px; }
         .canvas::-webkit-scrollbar { display: none; }
 
-        /* Minimalist Message Rows */
-        .msg-row { margin-bottom: 32px; display: flex; flex-direction: column; animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Human-like Message Layout */
+        .row { display: flex; gap: 16px; max-width: 100%; animation: softFade 0.6s ease; }
+        @keyframes softFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ai-wrap { display: flex; gap: 14px; max-width: 90%; }
-        .ai-pfp { 
-            width: 32px; height: 32px; border-radius: 10px; 
-            background: linear-gradient(135deg, #007AFF, #00C6FF);
-            display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        }
-        .ai-bubble { font-size: 17px; line-height: 1.6; font-weight: 400; color: #1d1d1f; margin-top: 4px; }
-
-        .user-bubble { 
-            align-self: flex-end; background: #ffffff; color: #1d1d1f;
-            padding: 12px 20px; border-radius: 22px; max-width: 80%;
-            font-size: 17px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            border: 0.5px solid rgba(0,0,0,0.05);
-        }
-
-        /* Floating Luxury Input */
-        .input-container { padding: 12px 20px 34px; background: transparent; }
-        .glass-pill { 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(25px); 
-            border-radius: 30px; padding: 6px 10px 6px 20px;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 17px; height: 48px; color: #1d1d1f; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; items-center; justify-content: center; flex-shrink: 0; }
+        .ai-avatar { background: #f0f4f9; color: #0b57d0; font-size: 18px; }
         
-        .action-icon { 
-            width: 40px; height: 40px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center;
-            color: #86868b; cursor: pointer; transition: 0.2s;
-        }
-        .action-icon:active { background: #f5f5f7; transform: scale(0.9); }
-        .send-btn { background: #1d1d1f; color: white !important; }
+        /* Large & Clean Text as requested */
+        .content { font-size: 19px; line-height: 1.6; color: #1F1F1F; font-weight: 400; padding-top: 4px; }
+        .user-content { background: #f0f4f9; padding: 12px 20px; border-radius: 24px; align-self: flex-end; max-width: 85%; }
 
-        /* Loader */
-        .shimmer { color: #86868b; font-size: 14px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        /* Subtle Input Pill */
+        .input-box { padding: 10px 20px 30px; }
+        .pill { 
+            background: #f0f4f9; border-radius: 32px; min-height: 60px;
+            display: flex; align-items: center; padding: 0 10px 0 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pill:focus-within { background: #e9eef6; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 18px; color: #1f1f1f; }
+        .icon-btn { width: 48px; height: 48px; display: flex; items-center; justify-content: center; color: #444746; cursor: pointer; border-radius: 50%; }
+        .icon-btn:active { background: #dee1e5; }
+        
+        /* Thinking Animation */
+        .shimmer { font-size: 14px; color: #86868b; letter-spacing: 1px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-text">Smile Hub</div>
-        <div class="flex items-center gap-4">
-            <i class="far fa-user-circle text-2xl text-[#86868b]"></i>
-            <button class="bg-[#1d1d1f] text-white px-5 py-2 rounded-full text-[13px] font-semibold tracking-wide">SIGN IN</button>
+        <div class="logo">Smile Hub</div>
+        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
+            <i class="far fa-user text-xl"></i>
         </div>
     </header>
 
     <main id="chat-box" class="canvas">
-        <div class="msg-row">
-            <div class="ai-wrap">
-                <div class="ai-pfp"><i class="fas fa-sparkles"></i></div>
-                <div class="ai-bubble">Bhai, kaise ho? Main Smile Hub hoon. Aaj kya help karun?</div>
-            </div>
+        <div class="row">
+            <div class="avatar ai-avatar"><i class="fas fa-sparkles"></i></div>
+            <div class="content">Namaste bhai. Bataiye, aaj aapke dimaag mein kya chal raha hai? Main kaise madad kar sakta hoon?</div>
         </div>
     </main>
 
-    <footer class="input-container">
+    <footer class="input-box">
         <div class="max-w-4xl mx-auto">
-            <div id="status" class="hidden text-[11px] font-bold text-blue-600 mb-2 ml-4 flex items-center gap-2">
-                <div class="w-2 h-2 bg-blue-600 rounded-full animate-ping"></div> PDF ATTACHED
-            </div>
-            <div class="glass-pill">
-                <label for="pdf-file" class="action-icon"><i class="fas fa-plus text-[18px]"></i></label>
-                <input type="file" id="pdf-file" class="hidden" accept=".pdf">
-                
-                <input type="text" id="query" placeholder="Sawal puchiye..." autocomplete="off">
-                
-                <div id="mic-btn" class="action-icon"><i class="fas fa-microphone text-[18px]"></i></div>
-                <button onclick="handleAI('text')" class="action-icon send-btn"><i class="fas fa-arrow-up text-[16px]"></i></button>
+            <div id="file-status" class="hidden text-[11px] text-blue-600 font-bold mb-2 ml-6"><i class="fas fa-paperclip"></i> DOCUMENT LOADED</div>
+            <div class="pill">
+                <input type="text" id="user-input" placeholder="Kuch baat karein..." autocomplete="off">
+                <div class="flex items-center gap-1">
+                    <label for="pdf-file" class="icon-btn"><i class="far fa-plus-square text-xl"></i></label>
+                    <input type="file" id="pdf-file" class="hidden" accept=".pdf">
+                    <div id="mic-btn" class="icon-btn"><i class="fas fa-microphone text-xl"></i></div>
+                    <button onclick="process('text')" class="icon-btn text-blue-600"><i class="fas fa-arrow-up text-xl"></i></button>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
         const chatBox = document.getElementById('chat-box');
-        const queryInput = document.getElementById('query');
+        const userInput = document.getElementById('user-input');
         const micBtn = document.getElementById('mic-btn');
-        const GROQ_ID = "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";
-        let contextPDF = "";
+        const GROQ_KEY = "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";
+        let pdfText = "";
 
-        // PDF Processing
+        // PDF Context
         document.getElementById('pdf-file').onchange = async (e) => {
             const file = e.target.files[0];
             if(file) {
-                document.getElementById('status').classList.remove('hidden');
+                document.getElementById('file-status').classList.remove('hidden');
                 const reader = new FileReader();
                 reader.onload = async function() {
                     const typedarray = new Uint8Array(this.result);
@@ -133,22 +107,22 @@
                         const content = await page.getTextContent();
                         text += content.items.map(s => s.str).join(' ');
                     }
-                    contextPDF = text;
+                    pdfText = text;
                 };
                 reader.readAsArrayBuffer(file);
             }
         };
 
-        // Voice Intelligence
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Recognition) {
-            const rec = new Recognition();
-            rec.lang = 'hi-IN';
-            micBtn.onclick = () => { rec.start(); micBtn.style.color = '#ff3b30'; };
-            rec.onresult = (e) => {
-                queryInput.value = e.results[0][0].transcript;
-                micBtn.style.color = '#86868b';
-                handleAI('voice');
+        // Voice to Voice Human Mode
+        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(Rec) {
+            const recognition = new Rec();
+            recognition.lang = 'hi-IN';
+            micBtn.onclick = () => { recognition.start(); micBtn.style.color = '#d93025'; };
+            recognition.onresult = (e) => {
+                userInput.value = e.results[0][0].transcript;
+                micBtn.style.color = '#444746';
+                process('voice');
             };
         }
 
@@ -156,52 +130,54 @@
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
             utter.lang = 'hi-IN';
-            utter.pitch = 1.1; utter.rate = 1.0;
+            utter.rate = 1.0;
             window.speechSynthesis.speak(utter);
         }
 
-        function addMessage(text, isUser, useVoice) {
-            const row = document.createElement('div');
-            row.className = 'msg-row';
+        function append(text, isUser, isVoice) {
+            const div = document.createElement('div');
+            div.className = isUser ? 'user-content' : 'row';
+            
             if(isUser) {
-                row.innerHTML = `<div class="user-bubble">${text}</div>`;
+                div.innerHTML = text;
+                div.style.alignSelf = 'flex-end';
             } else {
-                row.innerHTML = `<div class="ai-wrap"><div class="ai-pfp"><i class="fas fa-sparkles"></i></div><div class="ai-bubble">${text}</div></div>`;
-                if(useVoice) speak(text);
+                div.innerHTML = `<div class="avatar ai-avatar"><i class="fas fa-sparkles"></i></div><div class="content">${text}</div>`;
+                if(isVoice) speak(text);
             }
-            chatBox.appendChild(row);
+            chatBox.appendChild(div);
             chatBox.scrollTo({top: chatBox.scrollHeight, behavior: 'smooth'});
         }
 
-        async function handleAI(mode) {
-            const txt = queryInput.value.trim();
-            if(!txt) return;
-            addMessage(txt, true, false);
-            queryInput.value = '';
+        async function process(mode) {
+            const query = userInput.value.trim();
+            if(!query) return;
+            append(query, true, false);
+            userInput.value = '';
 
             const loader = document.createElement('div');
-            loader.className = 'msg-row shimmer';
-            loader.innerHTML = 'Smile Hub is thinking...';
+            loader.className = 'shimmer ml-14';
+            loader.innerText = 'thinking...';
             chatBox.appendChild(loader);
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_ID}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are Smile Hub AI. Ultra-professional but friendly friend (Bhai). Give short, direct, high-value answers. PDF Context: " + contextPDF },
-                            { role: "user", content: txt }
+                            { role: "system", content: "You are a human friend. NEVER mention bank names or Smile Finance initially. Talk like a real person. Analyze the user's trouble. If they sound troubled or need money/products, gently suggest a solution from Smile Finance Solution. Keep text large, clean, and professional. PDF Context: " + pdfText },
+                            { role: "user", content: query }
                         ]
                     })
                 });
                 const data = await res.json();
                 loader.remove();
-                addMessage(data.choices[0].message.content, false, mode === 'voice');
+                append(data.choices[0].message.content, false, mode === 'voice');
             } catch (e) {
                 loader.remove();
-                addMessage("Bhai, thoda connection issue hai.", false, false);
+                append("Bhai, network check karna ek baar.", false, false);
             }
         }
     </script>

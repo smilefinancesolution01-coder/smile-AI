@@ -3,56 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
-    <title>Smile Finance AI</title>
+    <title>Smile Finance Solution AI</title>
     <style>
+        /* Modern UI Style */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100dvh; width: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        
+        body, html { height: 100dvh; width: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #fff; }
         .app-wrapper { display: flex; flex-direction: column; height: 100%; }
-
-        /* Header with Login Logic */
-        header {
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f1f3f4;
-            background: #fff;
-        }
-        .logo { color: #1a73e8; font-weight: bold; font-size: 18px; }
-        .profile-btn { 
-            background: #1a73e8; color: white; width: 35px; height: 35px; 
-            border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; cursor: pointer; font-weight: bold;
-        }
-
-        /* Chat History Area */
-        #chat-history {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: #ffffff;
-        }
-
-        .msg { padding: 12px 18px; border-radius: 20px; max-width: 85%; font-size: 16px; line-height: 1.5; }
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f4; }
+        .logo { color: #1a73e8; font-weight: bold; font-size: 19px; }
+        .profile { background: #1a73e8; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 14px 18px; border-radius: 22px; max-width: 85%; font-size: 17px; line-height: 1.5; }
         .ai { background: #f0f4f9; color: #1f1f1f; align-self: flex-start; border-bottom-left-radius: 4px; }
         .user { background: #0b57d0; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Bottom Bar with Mic & Send */
-        .footer { padding: 10px 15px 25px; background: #fff; border-top: 1px solid #eee; }
-        .input-pill {
-            display: flex; align-items: center; background: #f1f3f4; 
-            border-radius: 30px; padding: 5px 15px;
-        }
-        input { 
-            flex: 1; border: none; background: transparent; 
-            height: 45px; font-size: 16px; outline: none; padding: 0 10px; 
-        }
-        .icon { color: #5f6368; font-size: 20px; cursor: pointer; margin: 0 8px; }
-        .send-btn { color: #1a73e8; font-weight: 600; cursor: pointer; padding: 5px 10px; }
+        .footer { padding: 10px 15px 20px; border-top: 1px solid #eee; }
+        .input-bar { display: flex; align-items: center; background: #f1f3f4; border-radius: 30px; padding: 5px 15px; }
+        input { flex: 1; border: none; background: transparent; height: 45px; font-size: 16px; outline: none; }
+        .send-btn { color: #0b57d0; font-weight: bold; cursor: pointer; padding: 10px; }
     </style>
 </head>
 <body>
@@ -60,48 +29,72 @@
 <div class="app-wrapper">
     <header>
         <div class="logo">Smile Finance Solution AI</div>
-        <div class="profile-btn" onclick="alert('Login feature coming soon!')">SF</div>
+        <div class="profile">SF</div>
     </header>
 
-    <div id="chat-history">
-        <div class="msg ai">
-            Namaste bhai! 🙏 Main <b>Smile AI</b> hoon. Bataiye, aaj hum kis loan ya shopping deal par baat karein?
-        </div>
+    <div id="chat-window">
+        <div class="bubble ai">Bhai, main taiyar hoon! Groq ki speed ke sath batao aaj kis loan ya product ki deal nikalni hai? 🚀</div>
     </div>
 
     <div class="footer">
-        <div class="input-pill">
-            <span class="icon" onclick="alert('Upload PDF feature')">+</span>
-            <input type="text" id="userInput" placeholder="Apne bhai se baat karein..." onkeypress="handleKey(event)">
-            <span class="icon">🎙️</span>
-            <div class="send-btn" onclick="sendMsg()">Send</div>
+        <div class="input-bar">
+            <input type="text" id="msgInput" placeholder="Apne bhai se baat karein...">
+            <div class="send-btn" id="sendBtn">Send</div>
         </div>
     </div>
 </div>
 
 <script>
-    const history = document.getElementById('chat-history');
-    const input = document.getElementById('userInput');
+    const chat = document.getElementById('chat-window');
+    const input = document.getElementById('msgInput');
+    const btn = document.getElementById('sendBtn');
 
-    function sendMsg() {
-        const text = input.value.trim();
-        if (text === "") return;
+    // GROQ API KEY YAHAN DALO (Security ke liye ise baad me backend me move karenge)
+    const GROQ_API_KEY = "AAPKI_GROQ_API_KEY_YAHAN_DALO"; 
 
-        // User Message Add Karna
-        history.innerHTML += `<div class="msg user">${text}</div>`;
+    async function getGroqResponse(userText) {
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${GROQ_API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "mixtral-8x7b-32768", // Groq ka super fast model
+                    messages: [
+                        { role: "system", content: "You are a friendly friend named Smile AI. Talk like a brother, use 'bhai' frequently, and help with finance and shopping." },
+                        { role: "user", content: userText }
+                    ]
+                })
+            });
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            return "Bhai, connectivity issue hai. Ek baar fir se try karo!";
+        }
+    }
+
+    async function send() {
+        const val = input.value.trim();
+        if(!val) return;
+
+        chat.innerHTML += `<div class="bubble user">${val}</div>`;
         input.value = "";
-        history.scrollTop = history.scrollHeight;
+        chat.scrollTop = chat.scrollHeight;
 
-        // AI Response Logic (Server Busy fallback)
-        setTimeout(() => {
-            history.innerHTML += `<div class="msg ai">Bhai, server thoda busy hai, main aapke liye best rates check kar raha hoon...</div>`;
-            history.scrollTop = history.scrollHeight;
-        }, 1000);
+        const aiLoading = document.createElement('div');
+        aiLoading.className = "bubble ai";
+        aiLoading.innerText = "...";
+        chat.appendChild(aiLoading);
+
+        const aiResponse = await getGroqResponse(val);
+        aiLoading.innerText = aiResponse;
+        chat.scrollTop = chat.scrollHeight;
     }
 
-    function handleKey(e) {
-        if (e.key === 'Enter') sendMsg();
-    }
+    btn.onclick = send;
+    input.onkeypress = (e) => { if(e.key === 'Enter') send(); };
 </script>
 
 </body>

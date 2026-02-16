@@ -3,92 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Hub | 10Cr Edition</title>
+    <title>Smile Finance Solution | AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --bg: #ffffff; --text: #050505; --accent: #2563eb; }
+        :root { --sf-blue: #0061FF; --sf-dark: #0A0A0B; }
         body { 
-            background: var(--bg); font-family: 'Outfit', sans-serif;
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: var(--text);
+            background: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden; color: var(--sf-dark);
         }
 
-        /* 10Cr Signature Header */
-        header { 
-            padding: 25px 5%; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 0.5px solid rgba(0,0,0,0.05);
-        }
-        .brand { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
-        .secure-tag { font-size: 10px; border: 1px solid #ddd; padding: 2px 8px; border-radius: 4px; color: #888; }
+        /* Stealth Header */
+        header { padding: 30px 6%; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #F0F0F0; }
+        .logo { font-size: 22px; font-weight: 700; color: var(--sf-dark); letter-spacing: -1px; }
 
-        /* The Intelligent Canvas */
-        .canvas { flex: 1; overflow-y: auto; padding: 40px 10%; display: flex; flex-direction: column; scroll-behavior: smooth; }
+        /* Infinite Canvas */
+        .canvas { flex: 1; overflow-y: auto; padding: 40px 10% 120px 10%; display: flex; flex-direction: column; gap: 50px; }
         .canvas::-webkit-scrollbar { display: none; }
 
-        /* Multi-Million Dollar Typography */
-        .msg-row { margin-bottom: 50px; width: 100%; animation: reveal 0.8s ease-out; }
-        @keyframes reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Typography & Content */
+        .ai-wrap { max-width: 900px; animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .ai-text { font-size: 26px; line-height: 1.5; font-weight: 400; color: #111; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ai-text { font-size: 26px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; max-width: 900px; }
-        .user-row { align-self: flex-end; text-align: right; }
-        .user-text { font-size: 20px; color: #777; font-weight: 400; line-height: 1.4; }
+        /* Premium Lead Form */
+        .lead-form {
+            background: #F8FAFF; border: 1px solid #E0E7FF; padding: 30px; border-radius: 24px;
+            margin-top: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.03); max-width: 450px;
+        }
+        .form-input { 
+            width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #E2E8F0; 
+            margin-bottom: 12px; outline: none; font-size: 16px;
+        }
+        .form-btn { background: var(--sf-blue); color: #fff; padding: 14px; width: 100%; border-radius: 12px; font-weight: 600; }
 
-        /* Feature Badge */
-        .badge { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 10px; display: inline-block; text-transform: uppercase; letter-spacing: 2px; }
+        /* Amazon Visual Card */
+        .amazon-card {
+            border: 1px solid #eee; border-radius: 20px; overflow: hidden; margin-top: 20px;
+            max-width: 350px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .amazon-img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; padding: 10px; }
+        .amazon-info { padding: 15px; }
+        .amazon-btn { background: #FF9900; color: #fff; display: block; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; }
 
-        /* The 10Cr Floating Command Center */
-        .cmd-center { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 10%; z-index: 50; }
+        /* Command Bar */
+        .footer-wrap { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 10%; }
         .pill { 
-            background: #f8f9fa; border: 1px solid rgba(0,0,0,0.03); border-radius: 40px;
-            padding: 10px 15px 10px 35px; display: flex; align-items: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.05); transition: 0.4s;
+            background: #F2F2F7; border-radius: 100px; padding: 8px 12px 8px 35px;
+            display: flex; align-items: center; gap: 15px; border: 1px solid transparent;
         }
-        .pill:focus-within { background: #fff; box-shadow: 0 40px 80px rgba(0,0,0,0.1); border-color: #eee; }
-
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 20px; height: 60px; color: var(--text); }
+        .pill:focus-within { background: #FFF; border-color: #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 20px; height: 60px; color: #000; }
         
-        .btn { 
-            width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: 0.3s; color: #222;
-        }
-        .btn:hover { background: #eee; }
-        .primary-btn { background: var(--text); color: #fff !important; }
-
-        /* Loader Animation */
-        .dot { width: 5px; height: 5px; background: #222; border-radius: 50%; animation: bounce 1s infinite alternate; }
-        @keyframes bounce { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+        .circle-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; items-center; justify-content: center; cursor: pointer; background: #111; color: #fff; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">Smile Finance Solution</div>
-        <div class="flex items-center gap-4">
-            <span class="secure-tag">ENCRYPTED</span>
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-500">S</div>
-        </div>
+        <div class="logo">Smile Finance Solution</div>
+        <div class="text-[10px] font-bold tracking-widest text-gray-400">INSTITUTIONAL AI</div>
     </header>
 
     <main id="chat-box" class="canvas">
-        <div class="msg-row">
-            <span class="badge">Intelligence Active</span>
-            <div class="ai-text">Namaste bhai. Smile Hub Pro mein aapka swagat hai. Aaj hum kis financial scheme ya compliance par baat shuru karein? Main sun raha hoon.</div>
+        <div class="ai-wrap">
+            <div class="ai-text">Namaste bhai. Smile Hub Pro active hai. Main aapki Govt Funding, Compliance aur Shopping mein madad kar sakta hoon. Bataiye, aaj kya plan hai?</div>
         </div>
     </main>
 
-    <footer class="cmd-center">
-        <div id="file-tag" class="hidden text-[11px] font-bold text-blue-600 mb-3 ml-6 uppercase tracking-widest">Doc Analysis Enabled</div>
+    <footer class="footer-wrap">
         <div class="pill">
-            <input type="text" id="user-input" placeholder="Aapka financial partner yahan hai..." autocomplete="off">
+            <input type="text" id="user-input" placeholder="Kuch poochiye..." autocomplete="off">
             <div class="flex items-center gap-2">
-                <label for="pdf-file" class="btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
-                <input type="file" id="pdf-file" class="hidden" accept=".pdf">
-                
-                <div id="mic-btn" class="btn"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
-                
-                <button onclick="askAI('text')" class="btn primary-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+                <label for="pdf-up" class="p-3 text-gray-500 cursor-pointer"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
+                <input type="file" id="pdf-up" class="hidden" accept=".pdf">
+                <button onclick="send()" class="circle-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
             </div>
         </div>
     </footer>
@@ -96,92 +87,83 @@
     <script>
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
-        const micBtn = document.getElementById('mic-btn');
-        const API_KEY = "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";
-        let pdfData = "";
+        const GROQ_ID = "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";
+        const AFFILIATE_ID = "smileai24-21";
 
-        // PDF Context Engine
-        document.getElementById('pdf-file').onchange = async (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                document.getElementById('file-tag').classList.remove('hidden');
-                const reader = new FileReader();
-                reader.onload = async function() {
-                    const typedarray = new Uint8Array(this.result);
-                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                    let text = "";
-                    for(let i=1; i<=pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const content = await page.getTextContent();
-                        text += content.items.map(s => s.str).join(' ');
-                    }
-                    pdfData = text;
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        };
-
-        // Premium Voice Engine
-        const Recog = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Recog) {
-            const r = new Recog(); r.lang = 'hi-IN';
-            micBtn.onclick = () => { r.start(); micBtn.style.color = '#2563eb'; };
-            r.onresult = (e) => {
-                userInput.value = e.results[0][0].transcript;
-                micBtn.style.color = '#222';
-                askAI('voice');
-            };
-        }
-
-        function speak(text) {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
-            utter.lang = 'hi-IN'; utter.rate = 1.0;
-            window.speechSynthesis.speak(utter);
-        }
-
-        function renderMessage(text, isUser, useVoice) {
+        function appendUI(html, isUser = false) {
             const div = document.createElement('div');
-            div.className = isUser ? 'msg-row user-row' : 'msg-row';
-            if(isUser) {
-                div.innerHTML = `<div class="user-text">${text}</div>`;
-            } else {
-                div.innerHTML = `<span class="badge">Smile AI Response</span><div class="ai-text">${text}</div>`;
-                if(useVoice) speak(text);
-            }
+            div.className = isUser ? 'self-end text-right text-2xl text-gray-400' : 'ai-wrap';
+            div.innerHTML = html;
             chatBox.appendChild(div);
             chatBox.scrollTo({top: chatBox.scrollHeight, behavior: 'smooth'});
         }
 
-        async function askAI(mode) {
+        // Amazon Product Card
+        function createAmazonCard(productName, imgUrl) {
+            return `
+                <div class="ai-text">Bhai, maine aapke liye Amazon par sabse behtareen ${productName} dhoonda hai:</div>
+                <div class="amazon-card">
+                    <img src="${imgUrl}" class="amazon-img">
+                    <div class="amazon-info">
+                        <p class="font-bold text-lg mb-2">${productName}</p>
+                        <a href="https://www.amazon.in/s?k=${productName}&tag=${AFFILIATE_ID}" target="_blank" class="amazon-btn">VIEW ON AMAZON</a>
+                    </div>
+                </div>`;
+        }
+
+        // Lead Form UI
+        function createLeadForm(schemeName) {
+            return `
+                <div class="ai-text">Bhai, ${schemeName} ke liye main aapki help kar sakta hoon. Bas apni details bhariye, hamari team aapko call karke guide karegi.</div>
+                <div class="lead-form">
+                    <p class="font-bold text-blue-600 mb-4 uppercase text-xs tracking-widest">Apply for Funding</p>
+                    <input type="text" id="lead-name" placeholder="Aapka Naam" class="form-input">
+                    <input type="tel" id="lead-phone" placeholder="WhatsApp Number" class="form-input">
+                    <button onclick="submitLead('${schemeName}')" class="form-btn">REQUEST CALLBACK</button>
+                </div>`;
+        }
+
+        async function submitLead(scheme) {
+            const name = document.getElementById('lead-name').value;
+            const phone = document.getElementById('lead-phone').value;
+            if(!name || !phone) return alert("Bhai, details toh bharo!");
+            
+            console.log("SENDING TO BACKEND:", { name, phone, scheme });
+            alert("Bhai, details mil gayi hain! Smile Finance ki team jaldi call karegi.");
+        }
+
+        async function send() {
             const q = userInput.value.trim();
             if(!q) return;
-            renderMessage(q, true, false);
+            appendUI(q, true);
             userInput.value = '';
-
-            const loader = document.createElement('div');
-            loader.className = 'flex gap-2 p-4';
-            loader.innerHTML = '<div class="dot"></div><div class="dot" style="animation-delay:0.2s"></div><div class="dot" style="animation-delay:0.4s"></div>';
-            chatBox.appendChild(loader);
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+                    headers: { "Authorization": `Bearer ${GROQ_ID}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are the Intelligence of Smile Finance Solution. 1. You provide Govt Scheme funding, loans, and compliance support. 2. Your Amazon ID is smileai24-21. 3. Talk like a 10Cr project owner—highly professional, friendly friend (Bhai). 4. Use large, clean fonts. 5. Analyze user's trouble and suggest landing pages. PDF Data: " + pdfData },
+                            { role: "system", content: "You are Smile Finance AI. 1. If user talks about funding/schemes/loans, reply with [FORM:SchemeName]. 2. If user wants a product, reply with [AMAZON:ProductName:ImageUrl]. 3. Talk like a 10Cr project owner. Friendly but Elite." },
                             { role: "user", content: q }
                         ]
                     })
                 });
                 const data = await res.json();
-                loader.remove();
-                renderMessage(data.choices[0].message.content, false, mode === 'voice');
+                let reply = data.choices[0].message.content;
+
+                if(reply.includes("[FORM:")) {
+                    const scheme = reply.split(":")[1].replace("]", "");
+                    appendUI(createLeadForm(scheme));
+                } else if(reply.includes("[AMAZON:")) {
+                    const parts = reply.split(":");
+                    appendUI(createAmazonCard(parts[1], parts[2] + ":" + parts[3].replace("]", "")));
+                } else {
+                    appendUI(`<div class="ai-text">${reply}</div>`);
+                }
             } catch (e) {
-                loader.remove();
-                renderMessage("Bhai, network issue hai, fir se bolna.", false, false);
+                appendUI(`<div class="ai-text">Bhai, thoda connection issue hai.</div>`);
             }
         }
     </script>

@@ -3,126 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smile Finance AI</title>
+    <title>Smile Finance Solution AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
     <style>
-        :root { --blue: #0061FF; --bg-gradient: linear-gradient(180deg, #E3F2FD 0%, #FFFFFF 100%); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root { --accent: #0061FF; --bg: #F8FBFF; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; margin: 0; }
         
-        body, html { 
-            height: 100%; margin: 0; padding: 0; overflow: hidden;
-            font-family: 'Outfit', sans-serif; background: var(--bg-gradient);
-        }
+        /* Premium Header */
+        header { height: 70px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #eee; z-index: 50; }
+        .brand { font-size: 19px; font-weight: 600; color: #004BA0; }
 
-        /* 10Cr Header: Fixed at top */
-        header { 
-            height: 70px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .brand-text { font-size: 18px; font-weight: 600; color: #004BA0; }
+        /* Smooth Chat Canvas */
+        .chat-view { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 25px; padding-bottom: 120px; }
+        .chat-view::-webkit-scrollbar { display: none; }
 
-        /* Scrollable Chat Area: Prevents bottom overlap */
-        .chat-container { 
-            height: calc(100vh - 160px); overflow-y: auto; padding: 20px;
-            display: flex; flex-direction: column; gap: 25px; scroll-behavior: smooth;
-        }
-        .chat-container::-webkit-scrollbar { display: none; }
+        /* Balanced Typography (Gemini Size) */
+        .ai-msg { font-size: 20px; line-height: 1.6; color: #111; max-width: 95%; animation: fadeIn 0.5s ease; }
+        .user-msg { font-size: 19px; align-self: flex-end; background: #E8F0FE; padding: 12px 20px; border-radius: 22px; color: #333; max-width: 85%; }
 
-        /* Gemini-Standard Typography (Responsive) */
-        .ai-bubble { font-size: 19px; line-height: 1.5; color: #1F1F1F; max-width: 95%; font-weight: 400; }
-        .user-bubble { 
-            font-size: 18px; background: #F0F4F9; padding: 12px 18px; 
-            border-radius: 20px; align-self: flex-end; max-width: 85%; color: #444;
-        }
+        /* Product Card Fix */
+        .card { background: white; border-radius: 24px; padding: 15px; border: 1px solid #eee; margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .p-img { width: 100%; border-radius: 15px; margin-bottom: 12px; background: #f9f9f9; min-height: 200px; object-fit: cover; }
+        .amz-link { background: #FF9900; color: #fff; display: block; text-align: center; padding: 15px; border-radius: 15px; font-weight: 700; text-decoration: none; }
 
-        /* The "Fixed-Visible" Input Engine */
-        .bottom-bar { 
-            position: fixed; bottom: 0; left: 0; right: 0; 
-            padding: 10px 15px 30px 15px; /* Extra bottom padding for mobile browsers */
-            background: white; border-top: 1px solid #eee;
-        }
-        .input-pill { 
-            background: #F0F4F9; border-radius: 30px; display: flex; align-items: center; 
-            padding: 5px 5px 5px 15px; height: 56px;
-        }
-        input { flex: 1; background: transparent; border: none; outline: none; font-size: 17px; color: #000; }
+        /* Fixed Bottom Bar (Visible Above Mobile Browser) */
+        .bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px 15px 35px; background: #fff; border-top: 1px solid #eee; }
+        .pill { background: #F1F3F4; border-radius: 35px; display: flex; align-items: center; padding: 5px 10px 5px 20px; height: 60px; }
+        input { flex: 1; background: transparent; border: none; outline: none; font-size: 18px; color: #000; }
+        
+        .btn { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #5f6368; cursor: pointer; }
+        .send { background: #1a73e8; color: #fff !important; }
 
-        /* Professional Buttons */
-        .btn-icon { 
-            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; color: #444; cursor: pointer;
-        }
-        .send-btn { background: #1F1F1F; color: white !important; margin-left: 8px; }
-
-        /* Visual Product Card */
-        .product-card { 
-            background: white; border-radius: 25px; padding: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #eee; margin-top: 10px;
-        }
-        .product-img { width: 100%; border-radius: 15px; margin-bottom: 10px; max-height: 220px; object-fit: contain; }
-        .amz-btn { 
-            background: #FF9900; color: white; display: block; text-align: center; 
-            padding: 14px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 15px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-text">Smile Finance AI</div>
-        <div class="flex items-center gap-2">
-            <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">10CR ENGINE</span>
-            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">S</div>
-        </div>
+        <div class="brand">Smile Finance Solution AI</div>
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">S</div>
     </header>
 
-    <main class="chat-container" id="chat">
-        <div class="ai-bubble">Namaste bhai. Smile Finance Solution mein aapka swagat hai. Main aapki Govt Funding aur Loans mein help kar sakta hoon. Bataiye aaj kya help karun?</div>
+    <main class="chat-view" id="chat">
+        <div class="ai-msg">Namaste bhai. Main Smile Hub AI hoon. Bataiye, aaj hum kis financial scheme ya shopping par charcha karein?</div>
     </main>
 
-    <footer class="bottom-bar">
-        <div class="input-pill">
-            <label for="f" class="btn-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
-            <input type="file" id="f" class="hidden">
-            
-            <input type="text" id="in" placeholder="Yahan shuru karein..." autocomplete="off">
-            
-            <div id="mic" class="btn-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
-            
-            <button onclick="ask()" class="btn-icon send-btn"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    <footer class="bar">
+        <div class="pill">
+            <label for="file" class="btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></label>
+            <input type="file" id="file" class="hidden">
+            <input type="text" id="msg" placeholder="Aapka bhai sun raha hai..." autocomplete="off">
+            <div id="mic" class="btn"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
+            <button onclick="ask()" class="btn send"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
         </div>
     </footer>
 
     <script>
         const chat = document.getElementById('chat');
-        const input = document.getElementById('in');
-        const mic = document.getElementById('mic');
+        const msg = document.getElementById('msg');
         const KEY = "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";
         const AMZ = "smileai24-21";
 
-        // Logic for Mic
-        const Reco = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Reco) {
-            const r = new Reco(); r.lang = 'hi-IN';
-            mic.onclick = () => { r.start(); mic.style.color = 'blue'; };
-            r.onresult = (e) => { input.value = e.results[0][0].transcript; ask(); mic.style.color = '#444'; };
-        }
-
         function render(html, isUser = false) {
             const d = document.createElement('div');
-            d.className = isUser ? 'user-bubble' : 'ai-bubble';
+            d.className = isUser ? 'user-msg' : 'ai-msg';
             d.innerHTML = html;
             chat.appendChild(d);
             chat.scrollTo(0, chat.scrollHeight);
         }
 
         async function ask() {
-            const q = input.value.trim();
-            if(!q) return;
-            render(q, true);
-            input.value = '';
+            const val = msg.value.trim();
+            if(!val) return;
+            render(val, true);
+            msg.value = '';
 
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -130,19 +85,24 @@
                     headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ role: "system", content: "You are Smile Finance AI. Professional friend. For products give [PROD:Name]. Large fonts." }, { role: "user", content: q }]
+                        messages: [
+                            { role: "system", content: "You are Smile Finance AI. 1. If user wants a product, respond ONLY in Hindi and end with [PRODUCT:Name]. 2. Talk like a billion-dollar brand friend. NO English mixed sentences." },
+                            { role: "user", content: val }
+                        ]
                     })
                 });
                 const data = await res.json();
                 let txt = data.choices[0].message.content;
 
-                if(txt.includes("[PROD:")) {
-                    const name = txt.split(":")[1].replace("]", "");
-                    render(`Bhai, ye raha aapka ${name}:<div class="product-card"><img src="https://source.unsplash.com/800x600/?${name}" class="product-img"><a href="https://www.amazon.in/s?k=${name}&tag=${AMZ}" class="amz-btn">Shop on Amazon</a></div>`);
+                if(txt.includes("[PRODUCT:")) {
+                    const name = txt.split(":")[1].replace("]", "").trim();
+                    // Using a reliable image source for products
+                    const img = `https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80`; 
+                    render(`${txt.split("[")[0]}<div class="card"><img src="${img}" class="p-img"><a href="https://www.amazon.in/s?k=${name}&tag=${AMZ}" class="amz-link">Shop on Amazon</a></div>`);
                 } else {
                     render(txt);
                 }
-            } catch (e) { render("Bhai, thoda wait karein."); }
+            } catch (e) { render("Bhai, network issue hai."); }
         }
     </script>
 </body>

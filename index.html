@@ -1,87 +1,119 @@
-<style>
-  /* 10 Cr App - Professional Standard CSS */
-  * { box-sizing: border-box; }
-  
-  body, html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Inter', -apple-system, sans-serif;
-    background-color: #ffffff;
-    overflow: hidden; /* Scroll sirf chat area mein hoga */
-  }
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smile Finance AI</title>
+    <style>
+        /* Base Setup - Poori screen cover karne ke liye */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body, html {
+            height: 100vh; /* 100% Mobile Height */
+            width: 100vw;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Bahar ka scroll band */
+        }
 
-  /* Main Container: Ye screen ki puri height lega */
-  .app-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
+        /* App Container */
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Full screen lega */
+            width: 100%;
+        }
 
-  /* Chat Area: Ye bachi hui sari jagah lega */
-  .chat-container {
-    flex-grow: 1; 
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+        /* Header: Saaf aur Fixed */
+        header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f3f4;
+            background: #fff;
+            flex-shrink: 0;
+        }
 
-  /* Premium AI Bubbles: Na bade, na chote, ekdum saaf */
-  .ai-msg {
-    background-color: #f0f4f9;
-    color: #1f1f1f;
-    padding: 14px 18px;
-    border-radius: 20px 20px 20px 4px;
-    font-size: 17px; /* Clear and readable */
-    line-height: 1.5;
-    max-width: 85%;
-    align-self: flex-start;
-  }
+        .logo { color: #1a73e8; font-weight: bold; font-size: 20px; }
+        .profile { background: #1a73e8; color: white; padding: 6px 10px; border-radius: 50%; font-size: 14px; }
 
-  /* Fixed Bottom Bar: Keyboard ke sath move hoga */
-  .bottom-nav {
-    padding: 15px;
-    background: #ffffff;
-    border-top: 1px solid #f1f1f1;
-  }
+        /* Chat Area: Ye area baki sari khali jagah bhar dega */
+        .chat-container {
+            flex-grow: 1; /* Khali jagah ko capture karega */
+            overflow-y: auto; /* Sirf yahan scroll hoga */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #ffffff;
+        }
 
-  .pill-input {
-    display: flex;
-    align-items: center;
-    background: #f1f3f4;
-    border-radius: 30px;
-    padding: 10px 20px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  }
+        /* Chat Bubbles: Professional Size */
+        .ai-bubble {
+            background: #f0f4f9;
+            color: #1f1f1f;
+            padding: 15px 20px;
+            border-radius: 22px 22px 22px 5px;
+            max-width: 85%;
+            font-size: 18px; /* Bade aur saaf shabd */
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
 
-  input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    outline: none;
-    padding: 5px 10px;
-  }
-</style>
+        /* Bottom Bar: Input area hamesha niche rahega */
+        .input-footer {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .pill-input {
+            display: flex;
+            align-items: center;
+            background: #f1f3f4;
+            border-radius: 30px;
+            padding: 8px 18px;
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            height: 40px;
+            font-size: 16px;
+            outline: none;
+            padding: 0 10px;
+        }
+
+        .send-icon { color: #1a73e8; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
 
 <div class="app-wrapper">
-  <header style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-    <span style="color:#1a73e8; font-weight:bold; font-size:18px;">Smile Finance Solution AI</span>
-    <span style="background:#1a73e8; color:white; border-radius:50%; padding:5px 10px; font-size:12px;">SF</span>
-  </header>
+    <header>
+        <div class="logo">Smile Finance Solution AI</div>
+        <div class="profile">SF</div>
+    </header>
 
-  <div class="chat-container">
-    <div class="ai-msg">
-      Namaste bhai! 🙏 Main <b>Smile AI</b> hoon. Bataiye, aaj hum kis loan, funding ya shopping deal par baat karein? Main ek dost ki tarah aapki help karunga.
+    <div class="chat-container">
+        <div class="ai-bubble">
+            Namaste bhai! 🙏 Main <b>Smile AI</b> hoon. Bataiye, aaj hum kis loan, funding ya shopping deal par baat karein? Main ek dost ki tarah aapki help karunga.
+        </div>
     </div>
-  </div>
 
-  <div class="bottom-nav">
-    <div class="pill-input">
-      <span style="font-size:24px; color:#5f6368; margin-right:10px;">+</span>
-      <input type="text" placeholder="Apne bhai se baat karein...">
-      <span style="color:#1a73e8; font-weight:bold;">Send</span>
+    <div class="input-footer">
+        <div class="pill-input">
+            <span style="font-size:20px; color:#5f6368;">+</span>
+            <input type="text" placeholder="Apne bhai se baat karein...">
+            <div class="send-icon">Send</div>
+        </div>
     </div>
-  </div>
 </div>
+
+</body>
+</html>

@@ -5,20 +5,20 @@ export default async function handler(req, res) {
   const { GEMINI_API_KEY } = process.env;
 
   try {
-    // API URL ko 'v1beta' se 'v1' par switch kiya gaya hai for stability
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Sabse stable URL aur Model 'gemini-pro' istemal kar rahe hain
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{
-          parts: [{ text: `You are Smile AI, a finance expert for Smile Finance Solution. Call the user 'bhai'. Help with loans and shopping (Amazon ID: smileai24-21). Reply in friendly Hindi/English mix. User: ${message}` }]
+          parts: [{ text: `You are Smile AI. Address as bhai. Help with loans and shopping (ID: smileai24-21). Reply in Hindi/English mix. User: ${message}` }]
         }]
       })
     });
 
     const data = await response.json();
 
-    // Agar model nahi mil raha toh ye specific check karega
+    // Agar ab bhi Google error de, toh wo yahan dikhega
     if (data.error) {
       return res.status(200).json({ reply: `Bhai, Google Error: ${data.error.message}` });
     }
@@ -27,9 +27,9 @@ export default async function handler(req, res) {
       return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     }
 
-    return res.status(200).json({ reply: "Bhai, API connect toh hui par response khali hai. Key check karo!" });
+    return res.status(200).json({ reply: "Bhai, API key connect hai par reply nahi mila. Key dobara check karein!" });
 
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, connection error hai, thodi der baad try karein!" });
+    return res.status(200).json({ reply: "Bhai, server busy hai, thodi der mein try karein!" });
   }
 }

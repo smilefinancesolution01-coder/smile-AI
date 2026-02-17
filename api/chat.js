@@ -5,31 +5,31 @@ export default async function handler(req, res) {
   const { GEMINI_API_KEY } = process.env;
 
   try {
-    // UPDATED URL: Ab ye error nahi dega
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    
-    const response = await fetch(geminiUrl, {
+    // Ye wala URL aur Model version bilkul perfect hai
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{
-          parts: [{ text: `You are Smile AI, a friendly finance expert. Call the user 'bhai'. User says: ${message}` }]
+          parts: [{ text: `You are Smile AI, a financial expert. Call the user 'bhai'. My Amazon ID is smileai24-21. Help with loans. Reply in Hindi/English. User says: ${message}` }]
         }]
       })
     });
 
     const data = await response.json();
 
-    // Check karein ki response sahi hai ya nahi
-    if (data.candidates && data.candidates[0].content.parts[0].text) {
-      return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
-    } else {
-      // Debugging ke liye error log karein
-      console.error("Gemini Error:", data);
-      return res.status(200).json({ reply: "Bhai, Gemini Key toh mil rahi hai par response nahi aa raha. Key dobara check karein!" });
+    // Agar error aata hai toh wo yahan dikhega
+    if (data.error) {
+      return res.status(200).json({ reply: `Bhai, Google keh raha hai: ${data.error.message}` });
     }
 
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+    }
+
+    return res.status(200).json({ reply: "Bhai, API Key load toh hui par output nahi aaya. Key refresh karo!" });
+
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, connection mein dikkat hai, par hum haar nahi maanenge!" });
+    return res.status(200).json({ reply: "Bhai, server thoda slow hai, dobara likho!" });
   }
 }

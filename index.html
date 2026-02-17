@@ -1,51 +1,76 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smile Finance Solution AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
+        #header { background: #0052cc; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; }
+        #login-btn { background: #fff; color: #0052cc; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Message Bubbles: Compact and Human-like */
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 15px; line-height: 1.4; position: relative; }
+        .user-msg { align-self: flex-end; background: #0052cc; color: white; border-bottom-right-radius: 2px; }
+        .ai-msg { align-self: flex-start; background: white; color: #333; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        /* Input Area */
+        #input-area { background: white; padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; border: 1px solid #ccc; padding: 12px; border-radius: 25px; outline: none; }
+        .icon-btn { cursor: pointer; font-size: 20px; color: #666; }
+        #send-btn { background: #0052cc; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+    </style>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
-    <header class="bg-blue-600 text-white p-4 text-xl font-bold text-center shadow-lg">
-        Smile Finance Solution AI
-    </header>
+<body>
 
-    <div id="chat-box" class="flex-1 overflow-y-auto p-4 space-y-4">
-        <div class="bg-white p-3 rounded-lg shadow max-w-[80%]">
-            Namaste bhai! 🙏 Main **Smile AI** hoon. Batayein, aaj hum kis business/personal loan ya shopping deal par baat karein?
-        </div>
+    <div id="header">
+        <span>Smile Finance Solution</span>
+        <button id="login-btn" onclick="alert('Gmail Login Feature coming soon!')">Gmail Login</button>
     </div>
 
-    <div class="p-4 bg-white border-t flex gap-2">
-        <input id="user-input" type="text" placeholder="Apne bhai se baat karein..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <button onclick="sendMessage()" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold">Send</button>
+    <div id="chat-container" id="chatBox">
+        <div class="msg ai-msg">Namaste bhai! 🙏 Main **Smile AI** hoon. Batayein, aaj hum kis business/personal loan ya shopping deal par baat karein?</div>
+    </div>
+
+    <div id="input-area">
+        <span class="icon-btn">📁</span> <input type="text" id="userInput" placeholder="Apne bhai se baat karein...">
+        <span class="icon-btn">🎤</span> <button id="send-btn" onclick="sendMessage()">Send</button>
     </div>
 
     <script>
         async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const chatBox = document.getElementById('chat-box');
-            if(!input.value) return;
+            const input = document.getElementById('userInput');
+            const chatContainer = document.getElementById('chat-container');
+            if (!input.value) return;
 
-            // User Message
-            chatBox.innerHTML += `<div class="bg-blue-100 p-3 rounded-lg shadow max-w-[80%] ml-auto text-right font-bold">${input.value}</div>`;
-            const msg = input.value;
+            // User message dikhana
+            const userDiv = document.createElement('div');
+            userDiv.className = 'msg user-msg';
+            userDiv.innerText = input.value;
+            chatContainer.appendChild(userDiv);
+
+            const userText = input.value;
             input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // AI Response Call
+            // API se baat karna (Aapka chat.js use hoga)
             try {
-                const res = await fetch('/api/chat', {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ message: msg })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
                 });
-                const data = await res.json();
-                chatBox.innerHTML += `<div class="bg-white p-3 rounded-lg shadow max-w-[80%] border-l-4 border-blue-600">${data.reply}</div>`;
+                const data = await response.json();
+                
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'msg ai-msg';
+                aiDiv.innerText = data.reply;
+                chatContainer.appendChild(aiDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             } catch (e) {
-                chatBox.innerHTML += `<div class="text-red-500 text-center">Bhai, thoda update ho raha hai, 10 sec baad likho!</div>`;
+                console.error("Error!", e);
             }
-            chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
 </body>

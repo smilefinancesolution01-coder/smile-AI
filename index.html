@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Smile AI - Official</title>
+    <title>Smile AI - Professional</title>
     <style>
         :root { --bg: #131314; --input-bg: #1e1f20; --text: #e3e3e3; --accent: #8ab4f8; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Google Sans', Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+        /* Header Fix */
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        .logo { color: var(--accent); font-size: 20px; font-weight: bold; }
-        .login-btn { background: #1e1f20; color: var(--accent); border: 1px solid #444; padding: 6px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; }
+        .logo { color: var(--accent); font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+        .login-btn { background: var(--input-bg); color: var(--accent); border: 1px solid #444; padding: 7px 18px; border-radius: 20px; font-size: 14px; cursor: pointer; }
 
-        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 100px; }
-        .msg { font-size: 16px; line-height: 1.6; margin-bottom: 10px; }
-        .label { font-size: 11px; color: #9aa0a6; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        /* Clean Chat Area */
+        #chat-window { flex: 1; overflow-y: auto; padding: 25px 15px; display: flex; flex-direction: column; gap: 28px; padding-bottom: 120px; }
+        .msg-group { display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
+        .sender-label { font-size: 11px; font-weight: bold; color: #9aa0a6; text-transform: uppercase; letter-spacing: 0.8px; padding-left: 2px; }
+        .msg-text { font-size: 16px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
 
-        /* Gemini Style Fixed Bottom Bar */
-        .bottom-section { position: fixed; bottom: 0; width: 100%; padding: 10px 15px 25px; background: var(--bg); }
-        .input-pill { background: var(--input-bg); border-radius: 32px; display: flex; align-items: center; padding: 6px 16px; gap: 15px; border: 1px solid #444746; }
+        /* Floating Input Bar like Gemini */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; padding: 10px 15px 35px; background: linear-gradient(transparent, var(--bg) 30%); }
+        .input-pill { background: var(--input-bg); border-radius: 32px; display: flex; align-items: center; padding: 4px 18px; gap: 15px; border: 1px solid #444746; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         
-        #userText { flex: 1; border: none; background: transparent; color: white; outline: none; font-size: 16px; padding: 10px 0; }
-        .icon { font-size: 22px; color: #c4c7c5; cursor: pointer; }
-        #sendBtn { color: var(--accent); border: none; background: none; font-weight: bold; font-size: 16px; cursor: pointer; }
+        #userText { flex: 1; border: none; background: transparent; color: white; outline: none; font-size: 16px; padding: 12px 0; }
+        .action-icon { font-size: 22px; color: #c4c7c5; cursor: pointer; transition: 0.2s; display: flex; align-items: center; }
+        .action-icon:hover { color: var(--accent); }
+        #sendBtn { color: var(--accent); border: none; background: none; font-weight: 600; font-size: 15px; cursor: pointer; padding-left: 5px; }
     </style>
 </head>
 <body>
@@ -34,81 +38,80 @@
     </header>
 
     <div id="chat-window">
-        <div class="msg">
-            <div class="label">Smile AI</div>
-            <div class="content">Namaste bhai! 🙏 Main **Smile AI** hoon. Aaj kis business loan, shopping (smileai24-21) ya funding par baat karein?</div>
+        <div class="msg-group">
+            <div class="sender-label">Smile AI</div>
+            <div class="msg-text">Namaste bhai! 🙏 Main Smile AI hoon. Main aapki har tarah ki financial samasya ka samadhan karne ke liye yahaan hoon.</div>
         </div>
     </div>
 
-    <div class="bottom-section">
+    <div class="bottom-nav">
         <div class="input-pill">
-            <label class="icon" title="Add File">➕<input type="file" id="pdfUpload" style="display:none" onchange="handleFile(this)"></label>
-            <input type="text" id="userText" placeholder="Ask your brother..." autocomplete="off">
-            <span class="icon" id="micBtn">🎤</span>
+            <label class="action-icon">➕<input type="file" id="fileInp" style="display:none"></label>
+            <input type="text" id="userText" placeholder="Apne bhai se baat karein..." autocomplete="off">
+            <span class="action-icon" id="micBtn">🎤</span>
             <button id="sendBtn">Send</button>
         </div>
     </div>
 
     <script>
-        const chatWindow = document.getElementById('chat-window');
-        const userText = document.getElementById('userText');
-        const sendBtn = document.getElementById('sendBtn');
-        const micBtn = document.getElementById('micBtn');
+        const chat = document.getElementById('chat-window');
+        const input = document.getElementById('userText');
 
-        // 🎤 Mic Function: Real Working
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            micBtn.onclick = () => {
-                recognition.start();
-                micBtn.style.color = "#ea4335"; // Recording color
-            };
-            recognition.onresult = (event) => {
-                userText.value = event.results[0][0].transcript;
-                micBtn.style.color = "#c4c7c5";
-                handleSend(); 
-            };
+        // 🔊 Natural Voice Function
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            // Sabse natural hindi/english voice select karna
+            utterance.voice = voices.find(v => v.lang.includes('hi') || v.lang.includes('en-IN')) || voices[0];
+            utterance.pitch = 1;
+            utterance.rate = 1;
+            window.speechSynthesis.speak(utterance);
         }
 
-        // 📁 File Function: Show on UI
-        function handleFile(input) {
-            if (input.files && input.files[0]) {
-                addMessage('YOU', `File selected: ${input.files[0].name}`);
-            }
-        }
+        // 🎤 Mic Function (Voice to Text)
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        document.getElementById('micBtn').onclick = () => {
+            recognition.start();
+            document.getElementById('micBtn').style.color = "#8ab4f8";
+        };
 
-        // ✉️ Send Logic with API Response
+        recognition.onresult = (e) => {
+            input.value = e.results[0][0].transcript;
+            document.getElementById('micBtn').style.color = "#c4c7c5";
+            handleSend();
+        };
+
         async function handleSend() {
-            const text = userText.value.trim();
-            if (!text) return;
+            const val = input.value.trim();
+            if(!val) return;
 
-            addMessage('YOU', text);
-            userText.value = '';
+            addMsg('YOU', val);
+            input.value = '';
 
             try {
-                // Calling your chat.js API
-                const response = await fetch('/api/chat', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: val })
                 });
-                const data = await response.json();
-                addMessage('SMILE AI', data.reply);
-            } catch (err) {
-                addMessage('SMILE AI', "Bhai, server connected nahi hai. Chat.js check karein.");
+                const data = await res.json();
+                addMsg('SMILE AI', data.reply);
+                speak(data.reply); // AI bol kar jawab dega
+            } catch(e) {
+                addMsg('SMILE AI', "Bhai, server connected nahi hai.");
             }
         }
 
-        function addMessage(sender, content) {
+        function addMsg(s, t) {
             const div = document.createElement('div');
-            div.className = 'msg';
-            div.innerHTML = `<div class="label">${sender}</div><div class="content">${content}</div>`;
-            chatWindow.appendChild(div);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+            div.className = 'msg-group';
+            div.innerHTML = `<div class="sender-label">${s}</div><div class="msg-text">${t}</div>`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
         }
 
-        sendBtn.onclick = handleSend;
-        userText.onkeypress = (e) => { if (e.key === 'Enter') handleSend(); };
+        document.getElementById('sendBtn').onclick = handleSend;
+        input.onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
     </script>
 </body>
 </html>

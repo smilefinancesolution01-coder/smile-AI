@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const { message } = req.body;
   
   // Is line mein apni API Key double quotes ke andar paste kar do
-  const MY_API_KEY =AIzaSyA16LSDaJ0Y5A_7RLzwo5VjLEYa3NGdz9U
+  const MY_API_KEY =("AIzaSyA16LSDaJ0Y5A_7RLzwo5VjLEYa3NGdz9U")
 
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MY_API_KEY}`, {

@@ -2,7 +2,6 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
   const { message } = req.body;
 
-  // AAPKI GROQ KEY - ISKA ISTEMAL KAR RAHE HAIN
   const GROQ_KEY = "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";
 
   try {
@@ -13,21 +12,20 @@ export default async function handler(req, res) {
         "Content-Type": "application/json" 
       },
       body: JSON.stringify({
-        // Yahan humne sabse bada aur powerful model (70B) lagaya hai
-        model: "llama3-70b-8192", 
+        // UPDATED MODEL: Ye Groq ka sabse naya aur fast model hai
+        model: "llama-3.3-70b-versatile", 
         messages: [
           { 
             role: "system", 
-            content: `You are Smile AI, a highly intelligent human-like finance expert for 'Smile Finance Solution'. 
+            content: `You are Smile AI, a world-class finance expert for 'Smile Finance Solution'. 
             - Always call the user 'bhai'.
-            - Your language should be very clean, natural, and friendly (Hindi-English mix).
             - Help with Business/Personal loans (Poonawalla, HDFC, ICICI, Tata Capital).
             - Suggest shopping deals using Amazon ID: smileai24-21.
-            - Provide insightful advice like a real human consultant.` 
+            - Talk like a supportive friend, analyze their trouble, and suggest products.` 
           },
           { role: "user", content: message }
         ],
-        temperature: 0.8 // Isse reply bilkul insano jaisa natural aayega
+        temperature: 0.7
       })
     });
 
@@ -36,10 +34,9 @@ export default async function handler(req, res) {
     if (data.choices && data.choices[0].message.content) {
       return res.status(200).json({ reply: data.choices[0].message.content });
     } else {
-      // Agar Groq ne koi technical error diya toh yahan dikhega
-      return res.status(200).json({ reply: `Bhai, system update ho raha hai. Error: ${data.error?.message || "Limit Reached"}` });
+      return res.status(200).json({ reply: `Bhai, error hai: ${data.error?.message}` });
     }
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, connection slow hai, ek baar phir try karo!" });
+    return res.status(200).json({ reply: "Bhai, connection check karo!" });
   }
 }

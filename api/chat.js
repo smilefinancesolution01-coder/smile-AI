@@ -11,15 +11,19 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "llama3-8b-8192",
-        messages: [{ role: "user", content: `You are Smile AI. Address user as bhai. Give a friendly reply in Hindi/English: ${message}` }]
+        messages: [
+          { role: "system", content: "You are Smile AI, a financial expert for Smile Finance Solution. Address the user as 'bhai'. Help with loans and shopping deals. Use Hindi/English mix." },
+          { role: "user", content: message }
+        ]
       })
     });
 
     const data = await response.json();
-    const aiReply = data.choices?.[0]?.message?.content || "Bhai, main sun raha hoon, batayein!";
+    // Agar Groq se asli jawab aaye toh wo dikhao
+    const aiReply = data.choices?.[0]?.message?.content || "Bhai, main sun raha hoon, batayein kya madad karun?";
     return res.status(200).json({ reply: aiReply });
 
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, server busy hai, thodi der mein try karein!" });
+    return res.status(200).json({ reply: "Bhai, thoda connection check karo, main reply nahi de pa raha!" });
   }
 }

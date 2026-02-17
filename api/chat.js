@@ -5,21 +5,21 @@ export default async function handler(req, res) {
   const { GEMINI_API_KEY } = process.env;
 
   try {
-    // Sabse stable URL aur Model 'gemini-pro' istemal kar rahe hain
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+    // Model ka naam badal kar 'gemini-1.5-flash-latest' kiya gaya hai
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{
-          parts: [{ text: `You are Smile AI. Address as bhai. Help with loans and shopping (ID: smileai24-21). Reply in Hindi/English mix. User: ${message}` }]
+          parts: [{ text: `You are Smile AI, a friendly finance expert for Smile Finance Solution. Always call the user 'bhai'. Help with loans and shopping (Amazon ID: smileai24-21). Reply in Hindi/English mix. User says: ${message}` }]
         }]
       })
     });
 
     const data = await response.json();
 
-    // Agar ab bhi Google error de, toh wo yahan dikhega
     if (data.error) {
+      // Agar ye bhi fail ho toh humein pata chal jayega
       return res.status(200).json({ reply: `Bhai, Google Error: ${data.error.message}` });
     }
 
@@ -27,9 +27,9 @@ export default async function handler(req, res) {
       return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     }
 
-    return res.status(200).json({ reply: "Bhai, API key connect hai par reply nahi mila. Key dobara check karein!" });
+    return res.status(200).json({ reply: "Bhai, connection toh ho gaya par jawab nahi aaya. Ek baar Key refresh karo!" });
 
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, server busy hai, thodi der mein try karein!" });
+    return res.status(200).json({ reply: "Bhai, lagta hai internet slow hai, dobara try karein!" });
   }
 }

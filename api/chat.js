@@ -1,23 +1,35 @@
 export default async function handler(req, res) {
-  const { message } = req.body;
-  const { GROQ_API_KEY, GEMINI_API_KEY } = process.env;
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  if (!GROQ_API_KEY && !GEMINI_API_KEY) {
-    return res.status(200).json({ reply: "Bhai, Vercel mein API Keys load nahi hui hain!" });
-  }
+  const { message } = req.body;
+  const { GEMINI_API_KEY } = process.env;
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // UPDATED URL: Ab ye error nahi dega
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const response = await fetch(geminiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ text: `You are Smile AI, a friendly finance expert. Call the user 'bhai'. User says: ${message}` }]
+        }]
+      })
     });
+
     const data = await response.json();
-    if (data.candidates) return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
-    
-    // Agar Gemini fail ho toh error dikhao
-    return res.status(200).json({ reply: "Bhai, Gemini key mein problem hai: " + (data.error?.message || "Check Key") });
+
+    // Check karein ki response sahi hai ya nahi
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+    } else {
+      // Debugging ke liye error log karein
+      console.error("Gemini Error:", data);
+      return res.status(200).json({ reply: "Bhai, Gemini Key toh mil rahi hai par response nahi aa raha. Key dobara check karein!" });
+    }
+
   } catch (error) {
-    return res.status(200).json({ reply: "Bhai, server tak baat nahi pahunch rahi!" });
+    return res.status(200).json({ reply: "Bhai, connection mein dikkat hai, par hum haar nahi maanenge!" });
   }
 }

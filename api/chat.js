@@ -1,44 +1,32 @@
 export default async function handler(req, res) {
-  // Vercel Environment Variable se key le raha hai
-  const key = process.env.GROQ_API_KEY; 
+  // Check if Gemini Key is in Vercel
+  const key = process.env.GEMINI_API_KEY; 
   
-  // Agar key nahi mili to ye message dikhayega
   if (!key) {
-    return res.status(200).json({ 
-      reply: "Bhai, Vercel Dashboard mein 'GROQ_API_KEY' naam ka variable nahi mil raha. Use check karo aur Redeploy karo!" 
-    });
+    return res.status(200).json({ reply: "Bhai, Vercel Dashboard mein 'GEMINI_API_KEY' check karo, mil nahi rahi!" });
   }
 
   try {
     const { message } = req.body;
+    // Google Gemini API URL
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${key}`,
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
-        messages: [
-          { 
-            role: "system", 
-            content: "You are a friendly Indian AI friend named Smile AI. Always address the user as 'bhai'. Talk about finance, loans, and shopping naturally." 
-          },
-          { role: "user", content: message }
-        ],
-        temperature: 0.7
+        contents: [{ parts: [{ text: `You are Smile AI, a friendly finance expert. Always address user as 'bhai' and reply in the same language. User: ${message}` }] }]
       })
     });
 
     const data = await response.json();
-
-    if (data.choices && data.choices[0]) {
-      res.status(200).json({ reply: data.choices[0].message.content });
+    
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     } else {
-      res.status(200).json({ reply: "Bhai, Groq API se response nahi aaya. Key expire toh nahi ho gayi?" });
+      res.status(200).json({ reply: "Bhai, Gemini key sahi hai par quota check karo!" });
     }
   } catch (error) {
-    res.status(500).json({ reply: "Bhai, server side par kuch fat gaya hai. Connection check karo!" });
+    res.status(500).json({ reply: "Bhai, Gemini connect nahi ho pa raha. Internet ya Key check karo!" });
   }
 }

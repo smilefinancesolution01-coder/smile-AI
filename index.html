@@ -2,76 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smile Finance Solution AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Smile AI - Finance Expert</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
-        #header { background: #0052cc; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; }
-        #login-btn { background: #fff; color: #0052cc; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        /* Premier Look & Feel */
+        :root { --primary: #1a73e8; --text-color: #3c4043; --bg-color: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Google Sans', Roboto, Arial, sans-serif; background: var(--bg-color); height: 100vh; display: flex; flex-direction: column; color: var(--text-color); }
+
+        /* Clean Header like Gemini */
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e8eaed; }
+        .logo-text { font-size: 1.2rem; font-weight: 500; color: #1a73e8; }
+        .gmail-login { color: #5f6368; border: 1px solid #dadce0; padding: 6px 16px; border-radius: 4px; font-size: 14px; background: none; cursor: pointer; }
+
+        /* Professional Chat Area */
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px 10%; display: flex; flex-direction: column; gap: 24px; }
+        .chat-row { display: flex; flex-direction: column; width: 100%; }
+        .label { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #70757a; text-transform: uppercase; }
         
-        /* Message Bubbles: Compact and Human-like */
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 15px; line-height: 1.4; position: relative; }
-        .user-msg { align-self: flex-end; background: #0052cc; color: white; border-bottom-right-radius: 2px; }
-        .ai-msg { align-self: flex-start; background: white; color: #333; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        /* Message Styling - Gemini Style Font Size */
+        .msg-content { font-size: 16px; line-height: 1.6; white-space: pre-wrap; color: var(--text-color); max-width: 100%; }
+        .user-row .msg-content { color: #1a73e8; }
+
+        /* Integrated Action Bar */
+        .input-outer { padding: 10px 10% 30px; background: white; }
+        .input-box { background: #f1f3f4; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; gap: 15px; border: 1px solid transparent; }
+        .input-box:focus-within { background: white; border-color: #dadce0; box-shadow: 0 1px 6px rgba(32,33,36,.28); }
         
-        /* Input Area */
-        #input-area { background: white; padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
-        input { flex: 1; border: 1px solid #ccc; padding: 12px; border-radius: 25px; outline: none; }
-        .icon-btn { cursor: pointer; font-size: 20px; color: #666; }
-        #send-btn { background: #0052cc; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+        #userText { flex: 1; border: none; background: transparent; outline: none; font-size: 16px; padding: 8px 0; color: #3c4043; }
+        .tool-icon { font-size: 20px; cursor: pointer; color: #5f6368; transition: 0.2s; }
+        .tool-icon:hover { color: #1a73e8; }
+        #sendBtn { color: #1a73e8; font-weight: bold; cursor: pointer; border: none; background: none; font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <div id="header">
-        <span>Smile Finance Solution</span>
-        <button id="login-btn" onclick="alert('Gmail Login Feature coming soon!')">Gmail Login</button>
+    <header>
+        <div class="logo-text">Smile Finance Solution</div>
+        <button class="gmail-login" id="loginBtn">Gmail Login</button>
+    </header>
+
+    <div id="chat-window">
+        <div class="chat-row ai-row">
+            <div class="label">Smile AI</div>
+            <div class="msg-content">Namaste bhai! 🙏 Swagat hai aapka Smile Finance Solution mein. Bataiye, aaj main aapki kaise madad kar sakta hoon?</div>
+        </div>
     </div>
 
-    <div id="chat-container" id="chatBox">
-        <div class="msg ai-msg">Namaste bhai! 🙏 Main **Smile AI** hoon. Batayein, aaj hum kis business/personal loan ya shopping deal par baat karein?</div>
-    </div>
-
-    <div id="input-area">
-        <span class="icon-btn">📁</span> <input type="text" id="userInput" placeholder="Apne bhai se baat karein...">
-        <span class="icon-btn">🎤</span> <button id="send-btn" onclick="sendMessage()">Send</button>
+    <div class="input-outer">
+        <div class="input-box">
+            <label class="tool-icon">📁<input type="file" id="pdfUpload" style="display:none"></label>
+            
+            <input type="text" id="userText" placeholder="Apne bhai se baat karein..." autocomplete="off">
+            
+            <span class="tool-icon" id="micBtn">🎤</span>
+            
+            <button id="sendBtn">Send</button>
+        </div>
     </div>
 
     <script>
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const chatContainer = document.getElementById('chat-container');
-            if (!input.value) return;
+        const chatWindow = document.getElementById('chat-window');
+        const userText = document.getElementById('userText');
+        const sendBtn = document.getElementById('sendBtn');
 
-            // User message dikhana
-            const userDiv = document.createElement('div');
-            userDiv.className = 'msg user-msg';
-            userDiv.innerText = input.value;
-            chatContainer.appendChild(userDiv);
+        // Typing & Sending Logic
+        async function handleSend() {
+            const message = userText.value.trim();
+            if(!message) return;
 
-            const userText = input.value;
-            input.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            // Display User Message
+            addMessage('You', message, 'user-row');
+            userText.value = '';
 
-            // API se baat karna (Aapka chat.js use hoga)
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: userText })
+                    body: JSON.stringify({ message: message })
                 });
                 const data = await response.json();
-                
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'msg ai-msg';
-                aiDiv.innerText = data.reply;
-                chatContainer.appendChild(aiDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            } catch (e) {
-                console.error("Error!", e);
+                addMessage('Smile AI', data.reply, 'ai-row');
+            } catch (err) {
+                addMessage('Error', 'Bhai, connection check karein.', 'ai-row');
             }
         }
+
+        function addMessage(sender, text, className) {
+            const div = document.createElement('div');
+            div.className = `chat-row ${className}`;
+            div.innerHTML = `<div class="label">${sender}</div><div class="msg-content">${text}</div>`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userText.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleSend(); });
+
+        // Mic & Login Logic placeholders
+        document.getElementById('micBtn').onclick = () => alert("Voice feature active hone wala hai bhai!");
+        document.getElementById('loginBtn').onclick = () => alert("Gmail Login integrated ho raha hai!");
     </script>
 </body>
 </html>

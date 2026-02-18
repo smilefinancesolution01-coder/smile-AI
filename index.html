@@ -1,120 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smile Finance AI | Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Smile Finance AI</title>
     <style>
-        body { background: linear-gradient(135deg, #f5faff 0%, #e0f0ff 100%); font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); }
-        .chat-area { height: calc(100vh - 240px); overflow-y: auto; scroll-behavior: smooth; }
-        .bot-bubble { background: white; border-radius: 25px 25px 25px 5px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.05); border: 1px solid #e1effe; }
-        .user-bubble { background: #3b82f6; color: white; border-radius: 25px 25px 5px 25px; align-self: flex-end; }
-        .typing-dot { width: 6px; height: 6px; background: #3b82f6; border-radius: 50%; animation: blink 1.4s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f8ff; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 12px 18px; border-radius: 20px; font-size: 18px; line-height: 1.5; }
+        .user { align-self: flex-end; background-color: #007bff; color: white; border-bottom-right-radius: 2px; }
+        .ai { align-self: flex-start; background-color: #ffffff; color: #333; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #input-area { background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 16px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        #file-input { display: none; }
+        .upload-btn { background: #e1f5fe; color: #0288d1; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
-
-    <header class="p-6 flex justify-between items-center bg-white/50 backdrop-blur-md">
-        <div>
-            <h1 class="text-2xl font-black text-blue-900 tracking-tight">Smile Finance AI</h1>
-            <p class="text-[10px] text-blue-500 font-bold uppercase tracking-[0.2em]">Smile Finance Solution</p>
-        </div>
-        <div class="flex gap-3">
-            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-1 chat-area p-5 flex flex-col gap-4" id="chatContainer">
-        <div class="bot-bubble p-5 max-w-[85%] animate-fade-in">
-            <p class="text-blue-900 text-lg">Namaste Bhai! 🙏</p>
-            <p class="text-blue-700 mt-2">Main aapka <b>Smile AI</b> dost hoon. Bataiye aaj kya tension hai? Main pehle aapki baat samajhunga, phir milkar solution nikalenge. 😊</p>
-        </div>
-    </main>
-
-    <footer class="p-4 bg-white/80 backdrop-blur-lg border-t border-blue-100">
-        <div class="flex justify-between gap-3 mb-4">
-            <button onclick="startVoice()" class="flex-1 bg-blue-50 p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-95 transition">
-                <i class="fas fa-microphone text-blue-600 text-lg"></i>
-                <span class="text-[10px] font-bold text-blue-800">Awaaz Se</span>
-            </button>
-            <button onclick="document.getElementById('fileInput').click()" class="flex-1 bg-blue-50 p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-95 transition">
-                <i class="fas fa-file-invoice text-blue-600 text-lg"></i>
-                <span class="text-[10px] font-bold text-blue-800">PDF Scan</span>
-            </button>
-            <button onclick="askForImage()" class="flex-1 bg-blue-50 p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-95 transition">
-                <i class="fas fa-magic text-blue-600 text-lg"></i>
-                <span class="text-[10px] font-bold text-blue-800">Image Gen</span>
-            </button>
-        </div>
-
-        <input type="file" id="fileInput" class="hidden" onchange="handleFileUpload(event)">
-
-        <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-full border border-blue-100 shadow-inner">
-            <input type="text" id="userInput" placeholder="Bhai se baat karein..." 
-                class="flex-1 bg-transparent px-5 py-3 outline-none text-blue-900 text-lg">
-            <button onclick="processInput()" class="bg-blue-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </footer>
-
-    <script>
-        // Placeholder for your Vercel Environment Logic [cite: 2026-02-15]
-        const chatContainer = document.getElementById('chatContainer');
-        const userInput = document.getElementById('userInput');
-
-        async function processInput() {
-            const text = userInput.value.trim();
-            if (!text) return;
-
-            addMessage(text, 'user');
-            userInput.value = '';
-
-            // Human-like Thinking Delay [cite: 2026-02-11]
-            const typingIndicator = addTypingIndicator();
-            
-            try {
-                // Yahan aapki Groq API call hogi (Backend logic)
-                setTimeout(() => {
-                    typingIndicator.remove();
-                    const reply = `Bhai, main samajh raha hoon ki aapko financial help chahiye. Hum HDFC ya Tata Capital se baat kar sakte hain. Pehle batao kitne budget ki zaroorat hai? (Amazon ID: smileai24-21)`;
-                    addMessage(reply, 'bot');
-                }, 2000);
-            } catch (error) {
-                typingIndicator.remove();
-                addMessage("Maaf karna bhai, thoda technical error hai. Dubara try karein?", 'bot');
-            }
-        }
-
-        function addMessage(text, role) {
-            const div = document.createElement('div');
-            div.className = role === 'user' ? 'user-bubble p-4 max-w-[85%]' : 'bot-bubble p-4 max-w-[85%]';
-            div.innerHTML = `<p class="text-md leading-relaxed">${text}</p>`;
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function addTypingIndicator() {
-            const div = document.createElement('div');
-            div.className = 'bot-bubble p-4 flex gap-1 items-center';
-            div.innerHTML = `<div class="typing-dot"></div><div class="typing-dot" style="animation-delay: 0.2s"></div><div class="typing-dot" style="animation-delay: 0.4s"></div>`;
-            chatContainer.appendChild(div);
-            return div;
-        }
-
-        // Feature Functions [cite: 2026-02-11, 2026-02-12]
-        function startVoice() { alert("Mic Active: Bhai, bol kar batao kya chahiye..."); }
-        function handleFileUpload(e) { alert("PDF Received: Main is document ko analyze kar raha hoon..."); }
-        function askForImage() { 
-            const p = prompt("Bhai, kis cheez ki photo banau? (Jaise: Shubh Deepawali ya Temple)");
-            if(p) addMessage(`Ban raha hai bhai... 🎨`, 'bot');
-        }
-    </script>
+<body>
+    <div id="chat-container">
+        <div class="message ai">नमस्ते भाई! मैं 'Smile AI' हूँ। बताइए आज मैं आपकी फाइनेंस में क्या मदद कर सकता हूँ?</div>
+    </div>
+    <div id="input-area">
+        <label for="file-input" class="button upload-btn">📎 PDF</label>
+        <input type="file" id="file-input" accept="application/pdf">
+        <input type="text" id="user-input" placeholder="अपनी बात यहाँ लिखें...">
+        <button onclick="sendMessage()">भेजें</button>
+    </div>
+    <script src="chat.js"></script>
 </body>
 </html>

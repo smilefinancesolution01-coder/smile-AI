@@ -1,28 +1,47 @@
-const API_KEY = "APNI_API_KEY_YAHAN_DALO"; // अपनी API Key यहाँ लिखें
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
+// Vercel Environment Variable से API Key लेगा
+const API_KEY = window.process?.env?.GEMINI_API_KEY || "YAHAN_APNI_KEY_BHI_DAL_SAKTE_HAIN"; 
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-// सिस्टम इंस्ट्रक्शन: यह कोड मुझे बताएगा कि मैं 'Smile AI' हूँ
-const systemInstruction = "तुम 'Smile Finance Solution' के Official AI हो। एक भाई की तरह बात करो। HDFC, ICICI, Tata Capital से लोन की बात करो। Amazon ID smileai24-21 इस्तेमाल करो। पेमेंट के बाद 5 दोस्तों को शेयर करने पर 99 रुपये का डिस्काउंट बताओ।"; [cite: 2026-02-11, 2026-02-12, 2026-02-15, 2026-02-18]
+const systemPrompt = `तुम 'Smile AI' हो, 'Smile Finance Solution' के पार्टनर। तुम Gemini की तरह बुद्धिमान हो। 
+नियम: 1. भाई की तरह बात करो। 2. सीधे बैंक का नाम या नंबर न दो, पहले एक-एक करके सवाल पूछो। 
+3. Amazon ID smileai24-21 का लैंडिंग पेज दिखाओ। 4. PDF मांगो और उसे एनालाइज करो। 
+5. पेमेंट के बाद 99 रुपये का डिस्काउंट और 5 दोस्तों को शेयर करने का बोलो। 6. बिना किसी फालतू सिंबल के साफ जवाब दो।`;
 
-async function getChatResponse(userMessage) {
+async function sendMessage() {
+    const inputField = document.getElementById('user-input');
+    const message = inputField.value.trim();
+    if (!message) return;
+
+    appendMessage(message, 'user');
+    inputField.value = '';
+
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: systemInstruction + "\nUser: " + userMessage }]
-                }]
+                contents: [{ parts: [{ text: systemPrompt + "\nUser: " + message }] }]
             })
         });
 
         const data = await response.json();
-        // अगर रिप्लाई मिल गया तो उसे स्क्रीन पर दिखाओ
-        return data.candidates[0].content.parts[0].text;
+        const aiResponse = data.candidates[0].content.parts[0].text;
+        appendMessage(aiResponse, 'ai');
+        
+        // स्पिकर फंक्शन (Voice Response)
+        const utterance = new SpeechSynthesisUtterance(aiResponse);
+        window.speechSynthesis.speak(utterance);
+
     } catch (error) {
-        console.error("Error connecting to Smile AI:", error);
-        return "भाई, थोड़ा नेटवर्क इशू है, एक बार फिर से कोशिश करो!";
+        appendMessage("भाई, नेटवर्क में कुछ दिक्कत है। फिर से पूछो।", 'ai');
     }
 }
 
-// बाकी का कोड जो बटन क्लिक पर काम करेगा...
+function appendMessage(text, sender) {
+    const container = document.getElementById('chat-container');
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    div.innerText = text;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
